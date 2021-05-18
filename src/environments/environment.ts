@@ -3,7 +3,11 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  maxCharCodigoProd: 6,
+  faltante: "../../../assets/icon/faltante.png",
+  bajoStock: "../../../assets/icon/bajo.png",
+  okStock: "../../../assets/icon/ok.png",
 };
 
 /*

@@ -1,0 +1,49 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-buttons>
+      <ion-button (click)="presentAlertSalir()" fill="clear" slot="start">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+      </ion-button>
+      <ion-title class="ion-text-center">Faltantes</ion-title>
+      <ion-button (click)="seguir()" fill="clear" slot="end" size="medium">
+        <ion-icon name="arrow-redo-outline" size="large" [color]="!sinSalvar ? 'dark': 'danger'" ></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item color="light">
+    <ion-text color="primary">
+      <h2>{{ nombrePDV }}</h2>
+    </ion-text>
+  </ion-item>
+  <ion-item color="light">
+    <ion-label position="floating">Producto</ion-label>
+    <ion-input #input [(ngModel)]="texto" clearInput="true" (keyup.enter)="buscarProducto()"></ion-input>
+    <ion-button (click)="buscarProducto()" slot="end" size="medium" color="light">
+      <ion-icon slot="icon-only" name="search-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-list *ngIf="mostrarListaProd">
+    <ion-item *ngFor="let item of busquedaProd; let i = index" color="light">
+      <ion-label>{{item.id}}-{{item.nombre}}</ion-label>
+      <ion-checkbox [(ngModel)]="item.seleccionado"></ion-checkbox>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+
+    <ion-item *ngFor="let item of tareas.rutero[i].detalle; let j = index">
+      <ion-label>
+        <ion-label>{{ item.idProducto }} - {{ item.nombre }}</ion-label>
+      </ion-label>
+      <ion-thumbnail slot="end" (click)="cambioStock(j)">
+        <img [src]="item.imagen">
+      </ion-thumbnail>
+    </ion-item>
+
+  </ion-list>
+
+</ion-content>
