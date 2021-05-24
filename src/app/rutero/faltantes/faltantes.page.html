@@ -5,8 +5,11 @@
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
       <ion-title class="ion-text-center">Faltantes</ion-title>
-      <ion-button (click)="seguir()" fill="clear" slot="end" size="medium">
-        <ion-icon name="arrow-redo-outline" size="large" [color]="!sinSalvar ? 'dark': 'danger'" ></ion-icon>
+      <ion-button (click)="salvar()" fill="clear" slot="end" size="medium">
+        <ion-icon name="save-outline" size="large" [color]="sinSalvar ? 'danger': 'light'" ></ion-icon>
+      </ion-button>
+      <ion-button *ngIf="completo" (click)="seguir()" fill="clear" slot="end" size="medium">
+        <ion-icon name="arrow-redo-outline" size="large" [color]="sinSalvar ? 'danger': 'light'" ></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
@@ -27,9 +30,8 @@
   </ion-item>
 
   <ion-list *ngIf="mostrarListaProd">
-    <ion-item *ngFor="let item of busquedaProd; let i = index" color="light">
+    <ion-item *ngFor="let item of busquedaProd; let i = index" color="light" (click)="productoSelect(i)">
       <ion-label>{{item.id}}-{{item.nombre}}</ion-label>
-      <ion-checkbox [(ngModel)]="item.seleccionado"></ion-checkbox>
     </ion-item>
   </ion-list>
 
@@ -37,7 +39,7 @@
 
     <ion-item *ngFor="let item of tareas.rutero[i].detalle; let j = index">
       <ion-label>
-        <ion-label>{{ item.idProducto }} - {{ item.nombre }}</ion-label>
+        {{ item.idProducto }} - {{ item.nombre }}
       </ion-label>
       <ion-thumbnail slot="end" (click)="cambioStock(j)">
         <img [src]="item.imagen">
@@ -47,3 +49,9 @@
   </ion-list>
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-title slot="end">Líneas {{linea}} de {{lineas}}</ion-title>
+  </ion-toolbar>
+</ion-footer>

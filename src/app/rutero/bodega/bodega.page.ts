@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
 import { TareasService } from 'src/app/services/tareas.service';
@@ -10,19 +10,21 @@ import { TransitoPage } from '../transito/transito.page';
   templateUrl: './bodega.page.html',
   styleUrls: ['./bodega.page.scss'],
 })
-export class BodegaPage {
+export class BodegaPage implements OnInit {
 
   @Input() pdv: PDV;
   @Input() i: number;
 
   nombrePDV: string = '';
+  salvarVisita: boolean = false;
 
   constructor( private alertCtrl: AlertController,
                private modalCtrl: ModalController,
                private tareas: TareasService,
-               private popoverCtrl: PopoverController ) {
+               private popoverCtrl: PopoverController ) {}
 
-    this.nombrePDV = this.tareas.pdvActivo.nombre;
+  ngOnInit() {
+    this.nombrePDV = this.pdv.nombre;
   }
 
 
@@ -76,10 +78,18 @@ export class BodegaPage {
     console.log('onDidDismiss resolved with role', role);
   }
 
-  seguir(){
+  salvar(){
     const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
     this.tareas.rutero[this.i].detalle = temp.slice(0);
-    this.tareas.guardarFaltantes();
+    this.salvarVisita = true;
+    this.tareas.guardarVisitas();
+  }
+
+  checkOut(){
+    this.tareas.rutero[this.i].checkOut = new Date();
+    this.tareas.rutero[this.i].visitado = true;
+    this.tareas.guardarVisitas();
+    this.modalCtrl.dismiss({check: true});
   }
 
 }

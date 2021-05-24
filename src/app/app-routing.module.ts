@@ -21,6 +21,10 @@ const routes: Routes = [
   {
     path: 'transito',
     loadChildren: () => import('./rutero/transito/transito.module').then( m => m.TransitoPageModule)
+  },
+  {
+    path: 'resumen',
+    loadChildren: () => import('./rutero/resumen/resumen.module').then( m => m.ResumenPageModule)
   }
 ];
 @NgModule({

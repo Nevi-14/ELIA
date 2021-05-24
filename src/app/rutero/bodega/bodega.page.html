@@ -5,7 +5,7 @@
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
       <ion-title class="ion-text-center">Bodega</ion-title>
-      <ion-button (click)="seguir()" fill="clear" slot="end" size="medium">
+      <ion-button (click)="salvar()" fill="clear" slot="end" size="medium">
         <ion-icon name="save-outline" size="large" [color]="!sinSalvar ? 'dark': 'danger'" ></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -31,6 +31,19 @@
       </ion-thumbnail>
     </ion-item>
 
+    <ion-item *ngIf="salvarVisita">
+      <ion-label position="floating">Observaciones:</ion-label>
+      <ion-textarea
+        [value]="tareas.rutero[i].observaciones"
+        [(ngModel)]="tareas.rutero[i].observaciones">
+      </ion-textarea>
+    </ion-item>
+
   </ion-list>
+
+  <p></p>
+  <ion-button (click)="checkOut()" expand="block" shape="round" *ngIf="salvarVisita">
+    Enviar...
+  </ion-button>
 
 </ion-content>

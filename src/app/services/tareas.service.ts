@@ -11,7 +11,6 @@ import { VisitaDiaria } from '../models/rutero';
 export class TareasService {
 
   pdvActivo: PDV;
-  productos: Productos[] = [];
   faltantes: Productos[] = [];
   pdvs: PDV[] = [];
   rutero: VisitaDiaria[] = [];
@@ -69,17 +68,8 @@ export class TareasService {
     await alert.present();
   }
 
-  guardarFaltantes(){
-    let faltantesLS: Productos[] = [];
-    let faltantesTemp: Productos[] = [];
-
-    if (localStorage.getItem('faltantes')){
-      faltantesLS = JSON.parse(localStorage.getItem('faltantes'));
-      faltantesTemp = faltantesLS.concat(this.faltantes);
-      localStorage.setItem('faltantes', JSON.stringify(faltantesTemp));
-    } else {
-      localStorage.setItem('faltantes', JSON.stringify(this.faltantes));
-    }
+  guardarVisitas(){
+    localStorage.setItem('visitaDiaria', JSON.stringify(this.rutero));
   }
 
 }

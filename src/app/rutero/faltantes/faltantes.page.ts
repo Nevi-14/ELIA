@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
 import { Productos, SKUS } from 'src/app/models/productos';
@@ -11,26 +11,33 @@ import { environment } from 'src/environments/environment';
   templateUrl: './faltantes.page.html',
   styleUrls: ['./faltantes.page.scss'],
 })
-export class FaltantesPage {
+export class FaltantesPage implements OnInit {
 
   @Input() pdv: PDV;
   @Input() i: number;
 
-  nombrePDV: string = '';
-  texto: string;
-  mostrarListaProd: boolean = false;
-  sinSalvar: boolean = false;
-  busquedaProd: Productos[] = [];
+  productos: Productos[] = [];                          // Lista de articulos del punto de venta
+  nombrePDV: string = '';                              // Nombre del Punto de Venta
+  texto: string;                                      // texto de busqueda
+  mostrarListaProd: boolean = false;                 // True = Se debe mostrar la lista de productos a buscar
+  sinSalvar: boolean = false;                       // Indica si hay líneas sin salvar
+  busquedaProd: Productos[] = [];                  // Arreglo que contiene la coincidencias de la busqueda. Este arreglo se despliega si mostrarListaProd = true
+  linea: number = 0;                              // Número de lineas ingresadas
+  lineas: number = 0;                            // Número de líneas a ingresar
+  completo: boolean = false;                    // True cuando se completaron la totalidad de líneas ingresadas en el detalle del rutero
 
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
-               private alertCtl: AlertController ) {
+               private alertCtl: AlertController ) {}
 
-    this.nombrePDV = this.tareas.pdvActivo.nombre;
-    this.tareas.productos = SKUS.slice(0);
+  ngOnInit() {
+    this.nombrePDV = this.pdv.nombre;
+    this.productos = SKUS.slice(0);
+    this.linea = this.tareas.rutero[this.i].detalle.length;
+    this.lineas = this.productos.length;
   }
 
-  buscarProducto(){
+  /*buscarProducto(){
     if ( !this.mostrarListaProd ){
       if (this.texto.length !== 0) {    
         this.busqueda();                  // Llena el arreglo BusquedaProd con los articulos que cumplen la seleccion
@@ -51,40 +58,42 @@ export class FaltantesPage {
         this.busqueda();
       }
     }
-  }
+  }*/
 
-  busqueda(){
-    if (isNaN(+this.texto)) {            // Se buscará por código de producto
-      // Se recorre el arreglo para buscar coincidencias
-      // this.mostrarProducto = false;
-      for (let i = 0; i < this.tareas.productos.length; i++) {
-        if (this.tareas.productos[i].nombre.toLowerCase().indexOf( this.texto.toLowerCase(), 0 ) >= 0) {
-            this.busquedaProd.push(this.tareas.productos[i]);
+  buscarProducto(){
+    if (this.texto.length > 0){
+      if (isNaN(+this.texto)) {            // Se buscará por código de producto
+        // Se recorre el arreglo para buscar coincidencias
+        for (let i = 0; i < this.productos.length; i++) {
+          if (this.productos[i].nombre.toLowerCase().indexOf( this.texto.toLowerCase(), 0 ) >= 0) {
+              this.busquedaProd.push(this.productos[i]);
+          }
+        }
+      } else {                      // la busqueda es por codigo de producto
+        const codigo = this.texto.toString();
+        if ( codigo.length <= environment.maxCharCodigoProd ){    // Busca por código de Producto Isleña
+          const product = this.productos.find( e => e.id == this.texto );
+          if ( product !== undefined ){
+            this.busquedaProd.push(product);
+          }
+        } else {     // busca por código de barras
+          const product = this.productos.find( e => e.codigoBarras == this.texto );
+          if ( product !== undefined ){
+            this.busquedaProd.push(product);
+          }
         }
       }
-    } else {                      // la busqueda es por codigo de producto
-      const codigo = this.texto.toString();
-      if ( codigo.length <= environment.maxCharCodigoProd ){    // Busca por código de Producto Isleña
-        const product = this.tareas.productos.find( e => e.id == this.texto );
-        if ( product !== undefined ){
-          this.busquedaProd.push(product);
-        }
-      } else {     // busca por código de barras
-        const product = this.tareas.productos.find( e => e.codigoBarras == this.texto );
-        if ( product !== undefined ){
-          this.busquedaProd.push(product);
-        }
+      if (this.busquedaProd.length === 0){                    // no hay coincidencias
+        this.tareas.presentAlertW( this.texto, 'No hay coincidencias' );
+        this.texto = '';
+        this.mostrarListaProd = false;
+      } else if (this.busquedaProd.length === 1){        // La coincidencia es exacta
+        this.productoSelect(0);
+      } else {
+        this.mostrarListaProd = true;                // Se muestra el Arr busquedaProd con el subconjunto de productos
       }
-    }
-    if (this.busquedaProd.length == 0){                    // no hay coincidencias
-      this.tareas.presentAlertW( this.texto, 'No hay coincidencias' );
-      this.texto = '';
-      this.mostrarListaProd = false;
-      // this.mostrarProducto = false;
-    } else if (this.busquedaProd.length == 1){        // La coincidencia es exacta
-      this.productoSelect(0);
     } else {
-      this.mostrarListaProd = true;                // Se muestra el Arr busquedaProd con el subconjunto de productos
+      this.mostrarListaProd = false;
     }
   }
 
@@ -92,13 +101,12 @@ export class FaltantesPage {
     this.mostrarListaProd = false;             // Y se activa el flag de mostrar producto
     if ( i >= 0 ){
       this.busquedaProd[i].seleccionado = false;
-      this.texto = this.busquedaProd[i].nombre;
+      this.texto = '';
       const j = this.existeEnDetalle(this.busquedaProd[i].id);
       if (j < 0){          // El Item NO había sido seleccionado anteriormente.
-        this.agregarFaltante(this.busquedaProd[i]);
-        this.sinSalvar = true;
+        this.agregarDetalle(this.busquedaProd[i]);
       }
-    } else {      // Se seleccionaron varios articulos
+    } /* else {      // Se seleccionaron varios articulos
       for (let x = 0; x < this.busquedaProd.length; x++) {
         if ( this.existeEnDetalle(this.busquedaProd[x].id) < 0 ) {   // si el articulo no existe en el detalle se agrega
           this.agregarFaltante(this.busquedaProd[x]);
@@ -108,13 +116,18 @@ export class FaltantesPage {
       this.texto = '';
       this.mostrarListaProd = false;
       this.sinSalvar = true;
-    }
+    } */
     this.busquedaProd = [];
   }
 
-  agregarFaltante( item: Productos ){
+  agregarDetalle( item: Productos ){
     const faltante = new DetalleVisita(item.id, item.nombre, item.codigoBarras, item.barrasCliente);
     this.tareas.rutero[this.i].detalle.unshift(faltante);
+    this.linea += 1;
+    if (this.linea === this.lineas){
+      this.completo = true;
+    }
+    this.sinSalvar = true;
   }
 
   existeEnDetalle( id: string ){
@@ -123,6 +136,13 @@ export class FaltantesPage {
       return j;
     } else {
       return -1;
+    }
+  }
+
+  salvar(){
+    if (this.sinSalvar){
+      this.tareas.guardarVisitas();
+      this.sinSalvar = false;
     }
   }
 
@@ -143,7 +163,7 @@ export class FaltantesPage {
     const alert = await this.alertCtl.create({
       cssClass: 'my-custom-class',
       header: 'Cuidado!!!',
-      message: 'Desea terminar la tarea.  Se perdera la informacion no salvada.',
+      message: 'Desea terminar la tarea.  Se puede perder la informacion no salvada.',
       buttons: [
         {
           text: 'Cancel',
