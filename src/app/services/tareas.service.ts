@@ -37,7 +37,7 @@ export class TareasService {
       const dia = new Date().getDay();
       this.pdvs.forEach( d => {
         if (d.diasVisita[dia] === 'X'){
-          visita = new VisitaDiaria( d.id, d.nombre, d.horaVisita,'', '', this.varConfig.agente );
+          visita = new VisitaDiaria( d.id, d.nombre, d.horaVisita, 0, 0, this.varConfig.agente );
           this.rutero.push(visita);
         }
       });

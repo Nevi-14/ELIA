@@ -1,5 +1,5 @@
 {
-  "appId": "cr.di.elia",
+  "appId": "io.ionic.starter",
   "appName": "Elia",
   "bundledWebRuntime": false,
   "npmClient": "npm",

@@ -6,15 +6,15 @@ export class VisitaDiaria {
     checkIn: Date;
     checkBodega: Date;
     checkOut: Date;
-    latitud: string;
-    longitud: string
+    latitud: number;
+    longitud: number;
     transmitido: boolean;
     visitado: boolean;
     idMercaderista: string;
     observaciones: string;
     detalle: DetalleVisita[] = [];
 
-    constructor ( id: string, nombre: string, horaVisita: string, latitud: string, longitud: string, idMercaderista: string ){
+    constructor ( id: string, nombre: string, horaVisita: string, latitud: number, longitud: number, idMercaderista: string ){
         this.idPDV = id;
         this.nombre = nombre;
         this.horaVisita = horaVisita;

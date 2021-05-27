@@ -5,6 +5,7 @@ import { BodegaPage } from '../bodega/bodega.page';
 import { CheckinPage } from '../checkin/checkin.page';
 import { FaltantesPage } from '../faltantes/faltantes.page';
 import { ResumenPage } from '../resumen/resumen.page';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
   selector: 'app-tab1',
@@ -16,7 +17,8 @@ export class Tab1Page {
   hora: Date = new Date();
 
   constructor( private modalCtrl: ModalController,
-               private tareas: TareasService ) {
+               private tareas: TareasService,
+               private geolocation: Geolocation ) {
     this.tareas.cargarRutero();
   }
 
@@ -32,8 +34,15 @@ export class Tab1Page {
       await modal.present();
       const {data} = await modal.onDidDismiss();
       if ( data.check ){
-        if (this.tareas.rutero[i].checkIn == null || this.tareas.rutero[i].checkBodega == null){ 
-          this.abrirFaltantes( i );
+        if (this.tareas.rutero[i].checkIn == null || this.tareas.rutero[i].checkBodega == null){
+          this.geolocation.getCurrentPosition().then((resp) => {
+            this.tareas.rutero[i].latitud = resp.coords.latitude;
+            this.tareas.rutero[i].longitud = resp.coords.longitude;
+            this.abrirFaltantes( i );
+           }).catch((error) => {
+             console.log('Error getting location', error);
+             this.abrirFaltantes( i );
+           });
         } else {
           this.abrirBodega( i );
         }
@@ -101,6 +110,15 @@ export class Tab1Page {
     if ( data.check ){
       return;
     }
+  }
+
+  getGeo(){
+    this.geolocation.getCurrentPosition().then((resp) => {
+      // resp.coords.latitude
+      // resp.coords.longitude
+     }).catch((error) => {
+       console.log('Error getting location', error);
+     });
   }
 
 }
