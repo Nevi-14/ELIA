@@ -25,6 +25,18 @@ const routes: Routes = [
   {
     path: 'resumen',
     loadChildren: () => import('./rutero/resumen/resumen.module').then( m => m.ResumenPageModule)
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('./configuracion/admin/admin.module').then( m => m.AdminPageModule)
+  },
+  {
+    path: 'login',
+    loadChildren: () => import('./configuracion/login/login.module').then( m => m.LoginPageModule)
+  },
+  {
+    path: 'rutas',
+    loadChildren: () => import('./configuracion/rutas/rutas.module').then( m => m.RutasPageModule)
   }
 ];
 @NgModule({

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AlertController } from '@ionic/angular';
+import { AlertController, LoadingController, ToastController } from '@ionic/angular';
 import { PDV, PDVS } from '../models/pdv';
 import { Productos } from '../models/productos';
 import { Ruta } from '../models/ruta';
@@ -14,9 +14,11 @@ export class TareasService {
   faltantes: Productos[] = [];
   pdvs: PDV[] = [];
   rutero: VisitaDiaria[] = [];
+  rutas: Ruta[] = [];
+  loading: HTMLIonLoadingElement;
 
   varConfig: Ruta = {
-    ruta: 'RU01',
+    ruta: 'ME01',
     handHeld: 'HH01',
     compania: 'ISLEÑA',
     bodega: 1,
@@ -24,7 +26,9 @@ export class TareasService {
     email: 'mauricio.herra@gmail.com',
   }
 
-  constructor( private alertController: AlertController ) {
+  constructor( private alertController: AlertController,
+               private loadingCtrl: LoadingController,
+               private toastCtrl: ToastController ) {
     this.pdvs = PDVS.slice(0);
   }
 
@@ -57,6 +61,10 @@ export class TareasService {
     }
   }
 
+  guardarVisitas(){
+    localStorage.setItem('visitaDiaria', JSON.stringify(this.rutero));
+  }
+
   async presentAlertW( subtitulo: string, mensaje: string ) {
     const alert = await this.alertController.create({
       header: 'Warning',
@@ -68,8 +76,23 @@ export class TareasService {
     await alert.present();
   }
 
-  guardarVisitas(){
-    localStorage.setItem('visitaDiaria', JSON.stringify(this.rutero));
+  async presentaLoading( mensaje: string ){
+    this.loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    await this.loading.present();
+  }
+
+  loadingDissmiss(){
+    this.loading.dismiss();
+  }
+
+  async presentaToast ( message ){
+    const toast = await this.toastCtrl.create({
+      message,
+      duration: 3500
+    });
+    toast.present();
   }
 
 }

@@ -4,10 +4,19 @@
 
 export const environment = {
   production: false,
+  prdMode: true,
   maxCharCodigoProd: 6,
+  adminClave: '@dminS1s-M3r',
+  preURL: 'http://mercaderistas',
+  TestURL: '_test',
+  postURL: '.soportecr.xyz/api/',
+  rutasURL: 'Ruta/',
+  clientesURL: 'clientes/',
+  productosURL: 'productos/',
   faltante: "../../../assets/icon/faltante.png",
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
+  version: "1.0.0"
 };
 
 /*
