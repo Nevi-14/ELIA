@@ -31,21 +31,12 @@ export class VisitaDiaria {
 }
 
 export class DetalleVisita {
-    idProducto: string;
-    nombre: string;
-    codigoBarras: string;
-    barrasCliente: string;
-    stock: number;          // 0 = normal; 1 = bajo Stock; -1 = faltante
-    seleccionado: boolean;
-    imagen: string;
-
-    constructor ( id: string, nombre: string, codBar: string, barCliente: string ){
-        this.idProducto = id;
-        this.nombre = nombre;
-        this.codigoBarras = codBar;
-        this.barrasCliente = barCliente;
-        this.stock = 0;
-        this.seleccionado = false;
-        this.imagen = "../../../assets/icon/ok.png";
-    }
+    constructor ( public idProducto: string, 
+                  public nombre: string, 
+                  public codBarras: string, 
+                  public barrasCliente: string, 
+                  public stock: number = 0, 
+                  public seleccionado: boolean = false,
+                  public imagen: string = '../../../assets/icon/ok.png',
+                  public justificacion: string = null ){}
 }

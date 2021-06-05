@@ -37,6 +37,10 @@ const routes: Routes = [
   {
     path: 'rutas',
     loadChildren: () => import('./configuracion/rutas/rutas.module').then( m => m.RutasPageModule)
+  },
+  {
+    path: 'pen-array',
+    loadChildren: () => import('./rutero/pen-array/pen-array.module').then( m => m.PenArrayPageModule)
   }
 ];
 @NgModule({

@@ -43,6 +43,7 @@ export class Tab1Page {
              console.log('Error getting location', error);
              this.abrirFaltantes( i );
            });
+           //this.abrirFaltantes( i );
         } else {
           this.abrirBodega( i );
         }

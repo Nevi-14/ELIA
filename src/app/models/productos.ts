@@ -91,7 +91,7 @@ export const SKUS = [{
 },
 {
     id: '11750',
-    idCliente: '215142',
+    idCliente: '96070',
     nombre: 'AGUA GASIFICADA COCO LIMON',
     precio: 0,
     codigoBarras: '016571954772',
@@ -99,5 +99,27 @@ export const SKUS = [{
     stock: 0,
     seleccionado: false,
     imagen: "../../../assets/icon/ok.png",
-}
+},
+{
+    id: '10606',
+    idCliente: '215142',
+    nombre: 'BARRA CEREAL CHOCOLATE',
+    precio: 0,
+    codigoBarras: '8423207203081',
+    barrasCliente: '8423207203081',
+    stock: 0,
+    seleccionado: false,
+    imagen: "../../../assets/icon/ok.png",
+},
+{
+    id: '11368',
+    idCliente: '215141',
+    nombre: 'CROUTON CEBOLLA CRUJIENTE',
+    precio: 0,
+    codigoBarras: '041500220208',
+    barrasCliente: '041500220208',
+    stock: 0,
+    seleccionado: false,
+    imagen: "../../../assets/icon/ok.png",
+},
 ]

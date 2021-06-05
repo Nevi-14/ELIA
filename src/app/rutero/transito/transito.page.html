@@ -14,5 +14,18 @@
   <ion-item>
     <ion-label>CEDI: 450 Ud</ion-label>
   </ion-item>
+  <ion-item *ngIf="hayFaltante">
+
+    <ion-select interface="action-sheet" [(ngModel)]="justificacion">
+      <ion-select-option value="FNE">Facturado No Entregado</ion-select-option>
+      <ion-select-option value="VE">Venta Extraordinaria</ion-select-option>
+      <ion-select-option value="FPV">Faltante PDV</ion-select-option>
+      <ion-select-option value="FDI">Faltante Isleña</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <p></p>
+  <ion-button (click)="salvar()" expand="block" shape="round">
+    Salvar
+  </ion-button>
 
 </ion-content>

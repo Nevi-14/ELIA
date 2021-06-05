@@ -16,7 +16,8 @@ export class BodegaPage implements OnInit {
   @Input() i: number;
 
   nombrePDV: string = '';
-  salvarVisita: boolean = false;
+  justificar: boolean = false;       // true = si ya se terminó de modificar estados y es hora de justificar faltantes
+  pendientes: number = 0;           // El número de faltantes que están pendientes de justificar
 
   constructor( private alertCtrl: AlertController,
                private modalCtrl: ModalController,
@@ -65,31 +66,48 @@ export class BodegaPage implements OnInit {
     }
   }
 
-  async transito(ev: any){
+  async transito(ev: any, j: number ){
     const popover = await this.popoverCtrl.create({
       component: TransitoPage,
+      componentProps: {
+        'stock': this.tareas.rutero[this.i].detalle[j].stock,
+        'faltante': this.tareas.rutero[this.i].detalle[j].justificacion
+      },
       cssClass: 'my-custom-class',
       event: ev,
       translucent: true
     });
     await popover.present();
 
-    const { role } = await popover.onDidDismiss();
-    console.log('onDidDismiss resolved with role', role);
+    const { data } = await popover.onDidDismiss();
+    console.log('onDidDismiss resolved with role', data);
+    if ( data !== undefined ){
+      this.tareas.rutero[this.i].detalle[j].justificacion = data.nota;
+    }
   }
 
   salvar(){
-    const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
-    this.tareas.rutero[this.i].detalle = temp.slice(0);
-    this.salvarVisita = true;
-    this.tareas.guardarVisitas();
+    if ( !this.justificar ){
+      this.justificar = true;
+      const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
+      this.tareas.rutero[this.i].detalle = temp.slice(0);
+      this.tareas.guardarVisitas();
+    } else {
+      this.checkOut();
+    }
   }
 
   checkOut(){
-    this.tareas.rutero[this.i].checkOut = new Date();
-    this.tareas.rutero[this.i].visitado = true;
-    this.tareas.guardarVisitas();
-    this.modalCtrl.dismiss({check: true});
+    const existe = this.tareas.rutero[this.i].detalle.findIndex( d => d.stock === -1 && d.justificacion === null );
+
+    if ( existe < 0) {
+      this.tareas.rutero[this.i].checkOut = new Date();
+      this.tareas.rutero[this.i].visitado = true;
+      this.tareas.guardarVisitas();
+      this.modalCtrl.dismiss({check: true});
+    } else {
+      this.tareas.presentAlertW( 'Faltantes', `Se debe justificar el faltante del artículo ${this.tareas.rutero[this.i].detalle[existe].idProducto}` );
+    }
   }
 
 }

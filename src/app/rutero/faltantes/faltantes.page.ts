@@ -1,10 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlertController, ModalController } from '@ionic/angular';
+import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
 import { Productos, SKUS } from 'src/app/models/productos';
 import { DetalleVisita } from 'src/app/models/rutero';
 import { TareasService } from 'src/app/services/tareas.service';
 import { environment } from 'src/environments/environment';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { PenArrayPage } from '../pen-array/pen-array.page';
 
 @Component({
   selector: 'app-faltantes',
@@ -18,7 +20,7 @@ export class FaltantesPage implements OnInit {
 
   productos: Productos[] = [];                          // Lista de articulos del punto de venta
   nombrePDV: string = '';                              // Nombre del Punto de Venta
-  texto: string;                                      // texto de busqueda
+  texto: string = '';                                      // texto de busqueda
   mostrarListaProd: boolean = false;                 // True = Se debe mostrar la lista de productos a buscar
   sinSalvar: boolean = false;                       // Indica si hay líneas sin salvar
   busquedaProd: Productos[] = [];                  // Arreglo que contiene la coincidencias de la busqueda. Este arreglo se despliega si mostrarListaProd = true
@@ -28,7 +30,9 @@ export class FaltantesPage implements OnInit {
 
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
-               private alertCtl: AlertController ) {}
+               private alertCtl: AlertController,
+               private barcodeScanner: BarcodeScanner,
+               private popoverCtrl: PopoverController ) {}
 
   ngOnInit() {
     this.nombrePDV = this.pdv.nombre;
@@ -36,29 +40,6 @@ export class FaltantesPage implements OnInit {
     this.linea = this.tareas.rutero[this.i].detalle.length;
     this.lineas = this.productos.length;
   }
-
-  /*buscarProducto(){
-    if ( !this.mostrarListaProd ){
-      if (this.texto.length !== 0) {    
-        this.busqueda();                  // Llena el arreglo BusquedaProd con los articulos que cumplen la seleccion
-      }
-    } else {
-      console.log(this.busquedaProd);
-      const listaAux = this.busquedaProd.filter( d => d.seleccionado );
-      console.log(listaAux);
-      if ( listaAux.length == 1 ){   // Un solo producto seleccionado
-        this.busquedaProd = listaAux.slice(0);
-        this.productoSelect(0);
-      } else if ( listaAux.length > 1 ){          // Se seleccionaron varios productos
-        this.busquedaProd = listaAux.slice(0);
-        this.productoSelect( -1 );
-      } else {                    // No se seleccionó ningún producto o se cambio el texto de seleccion
-        this.busquedaProd = [];
-        // this.mostrarListaProd = false;
-        this.busqueda();
-      }
-    }
-  }*/
 
   buscarProducto(){
     if (this.texto.length > 0){
@@ -92,8 +73,25 @@ export class FaltantesPage implements OnInit {
       } else {
         this.mostrarListaProd = true;                // Se muestra el Arr busquedaProd con el subconjunto de productos
       }
-    } else {
+    } else {                           // Se abre el lector de códigos de barras
       this.mostrarListaProd = false;
+      let texto: string = '';
+      this.barcodeScanner.scan().then(barcodeData => {
+        console.log('Barcode data', barcodeData);
+        if ( !barcodeData.cancelled ){
+          texto = barcodeData.text;
+          const item = this.productos.find( d => d.codigoBarras === texto )
+          if ( item ){
+            this.busquedaProd.push(item);
+            this.productoSelect(0);
+          } else {
+            this.tareas.presentAlertW('Scan', 'Producto no existe: ' + texto);
+          }
+        }
+       }).catch(err => {
+           console.log('Error', err);
+           this.tareas.presentAlertW('Scan', 'Error al abrir el Scaner');
+       });
     }
   }
 
@@ -106,17 +104,7 @@ export class FaltantesPage implements OnInit {
       if (j < 0){          // El Item NO había sido seleccionado anteriormente.
         this.agregarDetalle(this.busquedaProd[i]);
       }
-    } /* else {      // Se seleccionaron varios articulos
-      for (let x = 0; x < this.busquedaProd.length; x++) {
-        if ( this.existeEnDetalle(this.busquedaProd[x].id) < 0 ) {   // si el articulo no existe en el detalle se agrega
-          this.agregarFaltante(this.busquedaProd[x]);
-        }
-        this.busquedaProd[x].seleccionado = false;
-      }
-      this.texto = '';
-      this.mostrarListaProd = false;
-      this.sinSalvar = true;
-    } */
+    } 
     this.busquedaProd = [];
   }
 
@@ -159,11 +147,24 @@ export class FaltantesPage implements OnInit {
     }
   }
 
-  async presentAlertSalir() {
+  cargarFaltantes(){
+    let item: DetalleVisita;
+    let existe: number;
+
+    this.productos.forEach( d => {
+      existe = this.tareas.rutero[this.i].detalle.findIndex( e => e.idProducto === d.id );
+      if ( existe < 0 ){
+        item = new DetalleVisita( d.id, d.nombre, d.codigoBarras, d.barrasCliente, -1, false, environment.faltante );
+        this.tareas.rutero[this.i].detalle.push( item );
+      }
+    });
+  }
+
+  async presentAlert( texto: string, tipo: string ) {
     const alert = await this.alertCtl.create({
       cssClass: 'my-custom-class',
-      header: 'Cuidado!!!',
-      message: 'Desea terminar la tarea.  Se puede perder la informacion no salvada.',
+      header: 'Alto',
+      message: texto,
       buttons: [
         {
           text: 'Cancel',
@@ -175,7 +176,13 @@ export class FaltantesPage implements OnInit {
         }, {
           text: 'Si',
           handler: () => {
-            this.modalCtrl.dismiss({check: false});
+            if (tipo === 'Salir'){
+              this.modalCtrl.dismiss({check: false});
+            } else if ( tipo === 'Bodega') {
+              this.cargarFaltantes();
+              this.tareas.guardarVisitas();
+              this.modalCtrl.dismiss({check: true});
+            }
           }
         }
       ]
@@ -183,8 +190,28 @@ export class FaltantesPage implements OnInit {
     await alert.present();
   }
 
-  seguir(){
-    this.modalCtrl.dismiss({check: true});
+  async pendientes(ev: any){
+    let penArray: Productos[] = [];
+    let existe: number;
+
+    this.productos.forEach( d => {
+      existe = this.tareas.rutero[this.i].detalle.findIndex( e => e.idProducto === d.id );
+      if ( existe < 0 ){
+        penArray.push( d );
+      }
+    });
+    if ( penArray.length > 0 ){
+      const popover = await this.popoverCtrl.create({
+        component: PenArrayPage,
+        componentProps: {
+          'pendientes': penArray
+        },
+        cssClass: 'my-custom-class',
+        event: ev,
+        translucent: true
+      });
+      await popover.present();
+    }
   }
 
 }

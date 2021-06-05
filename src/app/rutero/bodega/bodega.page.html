@@ -23,7 +23,7 @@
   <ion-list>
 
     <ion-item *ngFor="let item of tareas.rutero[i].detalle; let j = index">
-      <ion-label (click)="transito($event)">
+      <ion-label (click)="transito( $event, j )" class="ion-text-wrap">
         {{ item.idProducto }} - {{ item.nombre }}
       </ion-label>
       <ion-thumbnail slot="end" (click)="cambioStock(j)">
@@ -31,7 +31,7 @@
       </ion-thumbnail>
     </ion-item>
 
-    <ion-item *ngIf="salvarVisita">
+    <ion-item *ngIf="justificar">
       <ion-label position="floating">Observaciones:</ion-label>
       <ion-textarea
         [value]="tareas.rutero[i].observaciones"
@@ -42,7 +42,7 @@
   </ion-list>
 
   <p></p>
-  <ion-button (click)="checkOut()" expand="block" shape="round" *ngIf="salvarVisita">
+  <ion-button (click)="checkOut()" expand="block" shape="round" *ngIf="justificar">
     Enviar...
   </ion-button>
 
