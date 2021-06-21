@@ -19,6 +19,30 @@
   </ion-item>
   <p></p>
 
+  <ion-list>
+    <ion-item color="light">
+      <ion-label>
+        <h2><strong>Numero de Ruta: {{tareas.varConfig.ruta}}</strong></h2>
+        <p>Nombre del Mercadista: {{tareas.varConfig.agente}}</p>
+        <p>Nombre de HH: {{tareas.varConfig.handHeld}}</p>
+        <p>Consecutivo Pedidos: {{tareas.varConfig.pedido}}</p>
+        <p>Consecutivo Devoluciones: : {{tareas.varConfig.devolucion}}</p>
+      </ion-label>
+    </ion-item>
+    <p></p>
+    <ion-item color="light">
+      <ion-label>Consecutivo Pedidos: </ion-label>
+      <ion-input type="text" [(ngModel)]="tareas.varConfig.pedido"></ion-input>
+    </ion-item>
+    <ion-item color="light">
+      <ion-label>Consecutivo Devoluciones: </ion-label>
+      <ion-input type="text" [(ngModel)]="tareas.varConfig.devolucion"></ion-input>
+    </ion-item>
+  </ion-list>
+  <p></p>
+  <ion-button (click)="sincronizar()" expand="block" shape="round">
+    Sincronizar
+  </ion-button>
 </ion-content>
 
 <ion-footer>

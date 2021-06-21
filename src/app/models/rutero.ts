@@ -12,9 +12,10 @@ export class VisitaDiaria {
     visitado: boolean;
     idMercaderista: string;
     observaciones: string;
+    orden: number;
     detalle: DetalleVisita[] = [];
 
-    constructor ( id: string, nombre: string, horaVisita: string, latitud: number, longitud: number, idMercaderista: string ){
+    constructor ( id: string, nombre: string, horaVisita: string, latitud: number, longitud: number, idMercaderista: string, orden: number ){
         this.idPDV = id;
         this.nombre = nombre;
         this.horaVisita = horaVisita;
@@ -27,6 +28,7 @@ export class VisitaDiaria {
         this.visitado = false;
         this.idMercaderista = idMercaderista;
         this.observaciones = null;
+        this.orden = orden;
     }
 }
 

@@ -19,10 +19,12 @@ export class Tab1Page {
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
                private geolocation: Geolocation ) {
+    this.tareas.cargarClientes();
     this.tareas.cargarRutero();
   }
 
   async checkIn( i: number ){
+    console.log(i);
     if (!this.tareas.rutero[i].visitado){ 
       const modal = await this.modalCtrl.create({
         component: CheckinPage,
@@ -65,7 +67,7 @@ export class Tab1Page {
     const modal2 = await this.modalCtrl.create({
       component: FaltantesPage,
       componentProps: {
-        'pdv': this.tareas.pdvs[i],
+        'pdv': this.tareas.pdvActivo,
         'i': i,
       },
       cssClass: 'my-custom-class'

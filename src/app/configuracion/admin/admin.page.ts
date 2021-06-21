@@ -58,15 +58,19 @@ export class AdminPage implements OnInit {
     const {data} = await popover.onWillDismiss();
 
     if (data !== undefined) {
-      this.tareas.varConfig.ruta = this.tareas.rutas[data.indice].ruta;         // Asigna la nueva ruta a la varaible de entorno de ISA
-      /*this.isa.varConfig.nomVendedor = this.isa.rutas[data.indice].agente;
-      this.isa.varConfig.usuario = this.isa.rutas[data.indice].ruta;
-      this.isa.varConfig.clave = this.isa.rutas[data.indice].handHeld;
-      this.isa.varConfig.bodega = this.isa.rutas[data.indice].bodega;
-      this.isa.varConfig.consecutivoPedidos = this.isa.rutas[data.indice].pedido;
-      this.isa.varConfig.consecutivoRecibos = this.isa.rutas[data.indice].recibo;
-      this.isa.varConfig.consecutivoDevoluciones = this.isa.rutas[data.indice].devolucion;
-      this.isa.varConfig.emailCxC = this.isa.rutas[data.indice].emaiL_EJECUTIVA;*/
+      this.tareas.varConfig = this.tareas.rutas[data.indice];         // Asigna la nueva ruta a la varaible de entorno de ISA
+      this.texto = this.tareas.varConfig.ruta;
+
+    }
+  }
+
+  sincronizar(){
+    if ( this.tareas.varConfig.ruta !== 'ME00'){
+      this.tareas.guardarVarConfig();
+      this.elia.syncClientes( this.tareas.varConfig.ruta );
+      this.elia.syncProductos();
+    } else {
+      this.tareas.presentAlertW('Sincronización', 'Debe seleccionar una ruta...');
     }
   }
 

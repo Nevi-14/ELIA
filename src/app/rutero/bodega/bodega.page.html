@@ -23,7 +23,7 @@
   <ion-list>
 
     <ion-item *ngFor="let item of tareas.rutero[i].detalle; let j = index">
-      <ion-label (click)="transito( $event, j )" class="ion-text-wrap">
+      <ion-label (click)="transito( $event, j )" class="ion-text-wrap" [color]="item.justificacion == null ? 'danger' : 'dark'">
         {{ item.idProducto }} - {{ item.nombre }}
       </ion-label>
       <ion-thumbnail slot="end" (click)="cambioStock(j)">

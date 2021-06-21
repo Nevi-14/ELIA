@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AlertController, LoadingController, ToastController } from '@ionic/angular';
-import { PDV, PDVS } from '../models/pdv';
+import { PDV } from '../models/pdv';
 import { Productos } from '../models/productos';
 import { Ruta } from '../models/ruta';
 import { VisitaDiaria } from '../models/rutero';
@@ -18,33 +18,51 @@ export class TareasService {
   loading: HTMLIonLoadingElement;
 
   varConfig: Ruta = {
-    ruta: 'ME01',
-    handHeld: 'HH01',
-    compania: 'ISLEÑA',
-    bodega: 1,
-    agente: 'Mauricio Herra',
-    email: 'mauricio.herra@gmail.com',
+    ruta: 'ME00',
+    handHeld: 'HH00',
+    bodega: 'ND',
+    agente: 'ND',
+    pedido: '',
+    devolucion: ''
   }
 
   constructor( private alertController: AlertController,
                private loadingCtrl: LoadingController,
                private toastCtrl: ToastController ) {
-    this.pdvs = PDVS.slice(0);
+    this.cargarVarConfig();
   }
 
+  cargarVarConfig(){
+    if (localStorage.getItem('IMAconfig')){
+      this.varConfig = JSON.parse( localStorage.getItem('IMAconfig'));
+    } 
+  }
+
+  guardarVarConfig(){
+    localStorage.setItem('IMAconfig', JSON.stringify(this.varConfig));
+  }
+
+  cargarClientes(){
+    if (localStorage.getItem('IMAclientes')){
+      this.pdvs = JSON.parse(localStorage.getItem('IMAclientes'));
+    }
+  }
+  
   cargarRutero(){
     let visita: VisitaDiaria;
 
     if (localStorage.getItem('visitaDiaria')){
       this.rutero = JSON.parse(localStorage.getItem('visitaDiaria'));
     } else {
-      const dia = new Date().getDay();
+      const dia = (new Date().getDay()) - 1;
       this.pdvs.forEach( d => {
         if (d.diasVisita[dia] === 'X'){
-          visita = new VisitaDiaria( d.id, d.nombre, d.horaVisita, 0, 0, this.varConfig.agente );
+          visita = new VisitaDiaria( d.id, d.nombre, d.horaVisita, 0, 0, this.varConfig.agente, d.orden );
           this.rutero.push(visita);
         }
       });
+      this.rutero.sort(function(a,b){return a.orden - b.orden;});
+      this.guardarVisitas();
     }
   }
 
