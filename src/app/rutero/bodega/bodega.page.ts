@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
+import { EliaService } from 'src/app/services/elia.service';
 import { TareasService } from 'src/app/services/tareas.service';
 import { environment } from 'src/environments/environment';
 import { TransitoPage } from '../transito/transito.page';
@@ -22,6 +23,7 @@ export class BodegaPage implements OnInit {
   constructor( private alertCtrl: AlertController,
                private modalCtrl: ModalController,
                private tareas: TareasService,
+               private bd: EliaService,
                private popoverCtrl: PopoverController ) {}
 
   ngOnInit() {
@@ -104,6 +106,7 @@ export class BodegaPage implements OnInit {
       this.tareas.rutero[this.i].checkOut = new Date();
       this.tareas.rutero[this.i].visitado = true;
       this.tareas.guardarVisitas();
+      this.bd.updateRutero( this.tareas.rutero[this.i] );
       this.modalCtrl.dismiss({check: true});
     } else {
       this.tareas.presentAlertW( 'Faltantes', `Se debe justificar el faltante del artículo ${this.tareas.rutero[this.i].detalle[existe].idProducto}` );

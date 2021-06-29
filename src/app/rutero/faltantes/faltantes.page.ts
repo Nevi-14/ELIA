@@ -7,6 +7,7 @@ import { TareasService } from 'src/app/services/tareas.service';
 import { environment } from 'src/environments/environment';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { PenArrayPage } from '../pen-array/pen-array.page';
+import { EliaService } from 'src/app/services/elia.service';
 
 @Component({
   selector: 'app-faltantes',
@@ -30,6 +31,7 @@ export class FaltantesPage implements OnInit {
 
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
+               private elia: EliaService,
                private alertCtl: AlertController,
                private barcodeScanner: BarcodeScanner,
                private popoverCtrl: PopoverController ) {}
@@ -37,8 +39,20 @@ export class FaltantesPage implements OnInit {
   ngOnInit() {
     this.nombrePDV = this.pdv.nombre;
     this.productos = SKUS.slice(0);
+    //this.cargarProductos( this.pdv.id );
     this.linea = this.tareas.rutero[this.i].detalle.length;
     this.lineas = this.productos.length;
+  }
+
+  async cargarProductos( idCliente: string ){
+    let prod: Productos[] = [];
+
+    prod = await this.elia.cargarProductos();
+    this.productos = prod.filter( d => d.idCliente === idCliente );
+    console.log( this.productos );
+    if (this.productos.length > 0){
+      this.lineas = this.productos.length;
+    }
   }
 
   buscarProducto(){

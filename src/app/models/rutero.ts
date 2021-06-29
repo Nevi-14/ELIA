@@ -1,5 +1,7 @@
 
+
 export class VisitaDiaria {
+    ID: string;
     idPDV: string;
     nombre: string;
     horaVisita: string;
@@ -29,6 +31,7 @@ export class VisitaDiaria {
         this.idMercaderista = idMercaderista;
         this.observaciones = null;
         this.orden = orden;
+        this.ID = '';
     }
 }
 
@@ -41,4 +44,28 @@ export class DetalleVisita {
                   public seleccionado: boolean = false,
                   public imagen: string = '../../../assets/icon/ok.png',
                   public justificacion: string = null ){}
+}
+
+export interface RuteroBD {
+    ID:             string;
+    idCliente:      string;
+    nombre:         string;
+    checkIn:        Date;
+    checkBodega:    Date;
+    checkOut:       Date;
+    latitud:        number;
+    longitud:       number;
+    idMercaderista: string;
+    observaciones:  string;
+}
+
+export class RuteroDetBD {
+    constructor (
+        public ID:         string,
+        public idCliente:  string,
+        public idProducto: string,
+        public nombre:     string,
+        public stock:      number,
+        public justificacion: string,
+    ){}
 }

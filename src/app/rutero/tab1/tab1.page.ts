@@ -6,6 +6,7 @@ import { CheckinPage } from '../checkin/checkin.page';
 import { FaltantesPage } from '../faltantes/faltantes.page';
 import { ResumenPage } from '../resumen/resumen.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { EliaService } from 'src/app/services/elia.service';
 
 @Component({
   selector: 'app-tab1',
@@ -18,6 +19,7 @@ export class Tab1Page {
 
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
+               private bd: EliaService,
                private geolocation: Geolocation ) {
     this.tareas.cargarClientes();
     this.tareas.cargarRutero();
@@ -59,11 +61,11 @@ export class Tab1Page {
     this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
     if ( this.tareas.rutero[i].checkIn === null ){ 
       this.tareas.rutero[i].checkIn = new Date();
-      this.tareas.guardarVisitas();
       // cargar visita anterior.
       this.tareas.cargarVisitaAnterior( this.tareas.rutero[i].idPDV, i);
+      this.bd.insertRutero( this.tareas.rutero[i] );
+      this.tareas.guardarVisitas();
     }
-
     const modal2 = await this.modalCtrl.create({
       component: FaltantesPage,
       componentProps: {

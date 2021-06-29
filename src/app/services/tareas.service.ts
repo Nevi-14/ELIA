@@ -33,36 +33,34 @@ export class TareasService {
   }
 
   cargarVarConfig(){
-    if (localStorage.getItem('IMAconfig')){
-      this.varConfig = JSON.parse( localStorage.getItem('IMAconfig'));
-    } 
+    this.varConfig = JSON.parse( localStorage.getItem('ELIAconfig')!) || [];
   }
 
   guardarVarConfig(){
-    localStorage.setItem('IMAconfig', JSON.stringify(this.varConfig));
+    localStorage.setItem('ELIAconfig', JSON.stringify(this.varConfig));
   }
 
   cargarClientes(){
-    if (localStorage.getItem('IMAclientes')){
-      this.pdvs = JSON.parse(localStorage.getItem('IMAclientes'));
-    }
+    this.pdvs = JSON.parse(localStorage.getItem('ELIAclientes')!) || [];
   }
   
   cargarRutero(){
     let visita: VisitaDiaria;
 
-    if (localStorage.getItem('visitaDiaria')){
-      this.rutero = JSON.parse(localStorage.getItem('visitaDiaria'));
+    if (localStorage.getItem('ELIAvisitaDiaria')){
+      this.rutero = JSON.parse(localStorage.getItem('ELIAvisitaDiaria'));
     } else {
-      const dia = (new Date().getDay()) - 1;
-      this.pdvs.forEach( d => {
-        if (d.diasVisita[dia] === 'X'){
-          visita = new VisitaDiaria( d.id, d.nombre, d.horaVisita, 0, 0, this.varConfig.agente, d.orden );
-          this.rutero.push(visita);
-        }
-      });
-      this.rutero.sort(function(a,b){return a.orden - b.orden;});
-      this.guardarVisitas();
+      if ( this.pdvs.length > 0 ){
+        const dia = (new Date().getDay()) - 1;
+        this.pdvs.forEach( d => {
+          if (d.diasVisita[dia] === 'X'){
+            visita = new VisitaDiaria( d.id, d.nombre, d.horaVisita, 0, 0, this.varConfig.agente, d.orden );
+            this.rutero.push(visita);
+          }
+        });
+        this.rutero.sort(function(a,b){return a.orden - b.orden;});
+        this.guardarVisitas();
+      }
     }
   }
 
@@ -70,8 +68,8 @@ export class TareasService {
     let visitaAnterior: VisitaDiaria[] = [];
     let visitaLS: VisitaDiaria[] = [];
 
-    if (localStorage.getItem('visitaAnterior')){
-      visitaLS = JSON.parse(localStorage.getItem('visitaDiaria'));
+    if (localStorage.getItem('ELIAvisitaAnterior')){
+      visitaLS = JSON.parse(localStorage.getItem('ELIAvisitaAnterior'));
       visitaAnterior = visitaLS.filter( d => d.idPDV === idPDV );
       if (visitaAnterior.length > 0){
         this.rutero[i].detalle = visitaAnterior[0].detalle.slice(0);
@@ -80,7 +78,7 @@ export class TareasService {
   }
 
   guardarVisitas(){
-    localStorage.setItem('visitaDiaria', JSON.stringify(this.rutero));
+    localStorage.setItem('ELIAvisitaDiaria', JSON.stringify(this.rutero));
   }
 
   async presentAlertW( subtitulo: string, mensaje: string ) {

@@ -1,10 +1,13 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { Storage } from '@ionic/storage-angular';
 import { environment } from 'src/environments/environment';
 import { ClientesBD, PDV } from '../models/pdv';
 import { Productos, ProductosBD } from '../models/productos';
 import { RolVisita, Ruta } from '../models/ruta';
+import { DetalleVisita, RuteroBD, RuteroDetBD, VisitaDiaria } from '../models/rutero';
 import { TareasService } from './tareas.service';
 
 @Injectable({
@@ -13,7 +16,29 @@ import { TareasService } from './tareas.service';
 export class EliaService {
 
   constructor( private http: HttpClient,
-               private tareas: TareasService ) { }
+               private storage: Storage,
+               private modalCtrl: ModalController,
+               private tareas: TareasService ) {
+    this.crearBD();
+  }
+  
+  async crearBD(){
+    await this.storage.create();
+  }
+
+  guardarSKUS( productos: Productos[] ){
+    this.storage.set( 'ELIAProductos', productos );
+  }
+
+  async cargarProductos(){
+    let productos: Productos[] = [];
+
+    const prod = await this.storage.get( 'ELIAProductos' );
+    productos = prod;
+    return productos;
+  }
+
+
   
   private getISAURL( api: string, id: string ){
     let test: string = '';
@@ -53,14 +78,14 @@ export class EliaService {
       resp => {
         console.log('ClientesBD', resp );
         resp.forEach(e => {
-          cliente = new PDV( e.cod_Clt, e.nom_Clt, e.dir_Clt, e.nom_Cto, e.num_Tel, '-------', '', e.latitud, e.longitud)
+          cliente = new PDV( e.cod_Clt, e.nom_Clt, e.dir_Clt, e.nom_Cto, e.num_Tel, '-------', '', e.latitud, e.longitud, e.codigo_WM);
           clientes.push( cliente );
         });
         console.log( 'Arreglo', clientes );
-        if (localStorage.getItem('IMAclientes')){
-          localStorage.removeItem('IMAclientes');
+        if (localStorage.getItem('ELIAclientes')){
+          localStorage.removeItem('ELIAclientes');
         }
-        localStorage.setItem('IMAclientes', JSON.stringify(clientes));
+        localStorage.setItem('ELIAclientes', JSON.stringify(clientes));
         this.tareas.cargarClientes();
         this.syncRolVisita( ruta, this.getDia( dia ) );
       }, error => {
@@ -110,7 +135,7 @@ export class EliaService {
               console.log('Cliente no encontrado: ', e.cliente);
             }
           });
-          localStorage.setItem('IMAclientes', JSON.stringify(this.tareas.pdvs));
+          localStorage.setItem('ELIAclientes', JSON.stringify(this.tareas.pdvs));
         }
       }, error => {
         console.log(error.message);
@@ -157,11 +182,136 @@ export class EliaService {
           productos.push( item );
         });
         console.log( 'Arreglo', productos );
-        // Debemos guardar en Storage los productos
+        this.guardarSKUS( productos );
+        this.modalCtrl.dismiss({'check': true});
       }, error => {
         console.log(error.message);
       }
     );
+  }
+
+  private postRutero( rutero: RuteroBD ){
+    const URL = this.getIMAURL( environment.ruteroPostURL, '' );
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      }
+    };
+    return this.http.post( URL, JSON.stringify(rutero), options );
+  }
+
+  insertRutero( rutero: VisitaDiaria ){
+    let item: RuteroBD = {
+      ID:             '',
+      idCliente:      rutero.idPDV,
+      nombre:         rutero.nombre,
+      checkIn:        rutero.checkIn,
+      checkBodega:    rutero.checkBodega,
+      checkOut:       rutero.checkOut,
+      latitud:        rutero.latitud,
+      longitud:       rutero.longitud,
+      idMercaderista: rutero.idMercaderista,
+      observaciones:  rutero.observaciones
+    }
+
+    let day = new Date(rutero.checkIn).getDate();
+    let month = new Date(rutero.checkIn).getMonth() + 1;
+    let year = new Date(rutero.checkIn).getFullYear();
+    let dia: string = day.toString();
+    let mes: string = month.toString();
+
+    if ( month >= 0 && month <= 9 ) {
+      mes = `0${month}`;
+    }
+    if ( day >= 0 && day <= 9 ){
+      dia = `0${day}`;
+    }
+    item.ID = `${year}${mes}${dia}`;
+    rutero.ID = item.ID;
+    const fecha = rutero.checkIn;
+    item.checkIn = new Date(fecha.getTime() - (fecha.getTimezoneOffset() * 60000));
+    this.postRutero( item ).subscribe(
+      resp => {
+        console.log('Rutero Insertado...', resp);
+      }, error => {
+        console.log('Error Actualizando Cliente ', error.message);
+      }
+    )
+  }
+
+  private putRutero( rutero: RuteroBD ){
+    const URL = this.getIMAURL( environment.ruteroPostURL, `?ID=${rutero.ID}&idCliente=${rutero.idCliente}` );
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+      }
+    };
+    return this.http.put( URL, JSON.stringify(rutero), options );
+  }
+
+  updateRutero( rutero: VisitaDiaria ){
+    let item: RuteroBD = {
+      ID:             rutero.ID,
+      idCliente:      rutero.idPDV,
+      nombre:         rutero.nombre,
+      checkIn:        rutero.checkIn,
+      checkBodega:    rutero.checkBodega,
+      checkOut:       rutero.checkOut,
+      latitud:        rutero.latitud,
+      longitud:       rutero.longitud,
+      idMercaderista: rutero.idMercaderista,
+      observaciones:  rutero.observaciones
+    }
+    const fechaIn = rutero.checkIn;
+    const fechaBodega = rutero.checkBodega;
+    const fechaOut = rutero.checkOut;
+    item.checkIn = new Date(fechaIn.getTime() - (fechaIn.getTimezoneOffset() * 60000));
+    item.checkOut = new Date(fechaOut.getTime() - (fechaOut.getTimezoneOffset() * 60000));
+    item.checkBodega = new Date(fechaBodega.getTime() - (fechaBodega.getTimezoneOffset() * 60000));
+
+    this.putRutero( item ).subscribe(
+      resp => {
+        console.log('Rutero Modificado...', resp);
+        // Inserta detalle del rutero
+        this.insertDetalleRutero( rutero.detalle, rutero.ID, rutero.idPDV );
+      }, error => {
+        console.log('Error Actualizando Cliente ', error.message);
+      }
+    );
+    console.log(JSON.stringify(item));
+  }
+
+  private postRuteroDetalle( detalle: RuteroDetBD[] ){
+    const URL = this.getIMAURL( environment.detalleRutURL, '' );
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      }
+    };
+    return this.http.post( URL, JSON.stringify(detalle), options );
+  }
+
+  private insertDetalleRutero( detalle: DetalleVisita[], ID: string, idCliente: string ){
+    let array: RuteroDetBD[] = [];
+    let item: RuteroDetBD;
+
+    if (detalle.length > 0){
+      detalle.forEach( d => {
+        item = new RuteroDetBD( ID, idCliente, d.idProducto, d.nombre, d.stock, d.justificacion );
+        array.push( item );
+      });
+      this.postRuteroDetalle( array ).subscribe(
+        resp => {
+          console.log('Insertado rutero Detalle. ', resp);
+        }, error => {
+          console.log('Error Insertando Rutero Detalle. ', error.message);
+        }
+      )
+    }
   }
 
 }

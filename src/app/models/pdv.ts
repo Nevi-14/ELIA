@@ -3,6 +3,7 @@
 export class PDV {
     nombre:     string;
     id:         string;
+    idWM:       string;
     direccion:  string;
     contacto:   string;
     telefonoContacto: string;
@@ -13,7 +14,7 @@ export class PDV {
     visitado:   boolean;
     orden:      number;
 
-    constructor( id: string, nombre: string, direccion: string, contacto: string, telContacto: string, dias: string, hora: string, latitud: number, longitud: number ){
+    constructor( id: string, nombre: string, direccion: string, contacto: string, telContacto: string, dias: string, hora: string, latitud: number, longitud: number, idWM: string ){
       this.nombre = nombre;
       this.id = id;
       this.direccion = direccion;
@@ -25,6 +26,7 @@ export class PDV {
       this.longitud = longitud;
       this.visitado = false;
       this.orden = 0;
+      this.idWM = idWM;
     }
 }
 
@@ -41,6 +43,7 @@ export interface ClientesBD {
   latitud:                       number;
   altitud:                       number;
   fechA_ACTUALIZACION_UBICACION: Date;
+  codigo_WM:                     string;
 }
 
 

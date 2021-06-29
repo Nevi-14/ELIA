@@ -36,7 +36,7 @@ export class Tab2Page {
     await modal1.present();
     const {data} = await modal1.onDidDismiss();
     if ( data.check ){
-      return;
+      this.tareas.cargarRutero();
     }
   }
 

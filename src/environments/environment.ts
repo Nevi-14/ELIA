@@ -15,6 +15,8 @@ export const environment = {
   clientesURL: 'IMA_Clientes/',
   rolVisitaURL: 'IMA_Visitas/',
   productosURL: 'productos/',
+  ruteroPostURL: 'Rutero/',
+  detalleRutURL: 'RuteroDet/',
   faltante: "../../../assets/icon/faltante.png",
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
