@@ -13,25 +13,28 @@ export class TransitoPage implements OnInit {
   @Input() faltante: string;
 
   hayFaltante: boolean = false;
+  hayBajoStock: boolean = false;
   justificacion: string = '';
 
   constructor( private popoverCtrl: PopoverController,
                private tareas: TareasService ) { }
 
   ngOnInit() {
+    this.justificacion = this.faltante;
     if (this.stock === -1){
       this.hayFaltante = true;
-      this.justificacion = this.faltante;
+    } else if (this.stock === 1){
+      this.hayBajoStock = true;
     }
   }
 
   salvar(){
     if (this.hayFaltante && this.justificacion !== ''){
       this.popoverCtrl.dismiss({ nota: this.justificacion });
-    } else if ( !this.hayFaltante ){
-      this.popoverCtrl.dismiss({ nota: '' });
+    } else if ( this.hayBajoStock && this.justificacion !== '' ){
+      this.popoverCtrl.dismiss({ nota: this.justificacion });
     } else {
-      this.tareas.presentAlertW('Faltante', 'Debe justificarse la razón del faltante.');
+      this.tareas.presentAlertW('Faltante', 'Debe justificarse la razón del faltante o bajo stock.');
     }
   }
 

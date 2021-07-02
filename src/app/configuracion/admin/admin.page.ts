@@ -29,17 +29,17 @@ export class AdminPage implements OnInit {
     }
     this.version = environment.version;
     if (this.tareas.rutas.length == 0) {
-      this.tareas.presentaLoading('Sincronizando Rutas...');
+      //this.tareas.presentaLoading('Sincronizando Rutas...');
       this.elia.getRutas().subscribe(
         resp => {
           console.log('RutasBD', resp );
           this.tareas.rutas = resp;
-          this.tareas.loadingDissmiss();
+          //this.tareas.loadingDissmiss();
           this.tareas.presentaToast('Rutas cargadas...');
           console.log( 'Arreglo', this.tareas.rutas );
         }, error => {
           console.log(error.message);
-          this.tareas.loadingDissmiss();
+          //this.tareas.loadingDissmiss();
           this.tareas.presentAlertW('Cargando Rutas', error.message);
         }
       );                                // Actualiza la lista de rutas en ISA
@@ -69,6 +69,9 @@ export class AdminPage implements OnInit {
       this.tareas.guardarVarConfig();
       this.elia.syncClientes( this.tareas.varConfig.ruta );
       this.elia.syncProductos();
+      if (localStorage.getItem('ELIAvisitaDiaria')){
+        localStorage.removeItem('ELIAvisitaDiaria');
+      }
     } else {
       this.tareas.presentAlertW('Sincronización', 'Debe seleccionar una ruta...');
     }

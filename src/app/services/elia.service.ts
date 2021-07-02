@@ -73,7 +73,7 @@ export class EliaService {
     const dia = new Date().getDay();
     console.log('Dia: ', dia);
 
-    // this.presentaLoading('Sincronizando...');
+    //this.presentaLoading('Sincronizando...');
     this.getClientes(ruta).subscribe(
       resp => {
         console.log('ClientesBD', resp );
@@ -268,9 +268,9 @@ export class EliaService {
     const fechaIn = rutero.checkIn;
     const fechaBodega = rutero.checkBodega;
     const fechaOut = rutero.checkOut;
-    item.checkIn = new Date(fechaIn.getTime() - (fechaIn.getTimezoneOffset() * 60000));
-    item.checkOut = new Date(fechaOut.getTime() - (fechaOut.getTimezoneOffset() * 60000));
-    item.checkBodega = new Date(fechaBodega.getTime() - (fechaBodega.getTimezoneOffset() * 60000));
+    item.checkIn = new Date(new Date(fechaIn).getTime() - (new Date(fechaIn).getTimezoneOffset() * 60000));
+    item.checkOut = new Date(new Date(fechaOut).getTime() - (new Date(fechaOut).getTimezoneOffset() * 60000));
+    item.checkBodega = new Date(new Date(fechaBodega).getTime() - (new Date(fechaBodega).getTimezoneOffset() * 60000));
 
     this.putRutero( item ).subscribe(
       resp => {

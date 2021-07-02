@@ -51,6 +51,7 @@ export class TareasService {
       this.rutero = JSON.parse(localStorage.getItem('ELIAvisitaDiaria'));
     } else {
       if ( this.pdvs.length > 0 ){
+        this.rutero = [];
         const dia = (new Date().getDay()) - 1;
         this.pdvs.forEach( d => {
           if (d.diasVisita[dia] === 'X'){
