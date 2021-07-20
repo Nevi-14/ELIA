@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { PopoverController } from '@ionic/angular';
+import { Productos } from 'src/app/models/productos';
+import { EliaService } from 'src/app/services/elia.service';
 import { TareasService } from 'src/app/services/tareas.service';
 
 @Component({
@@ -11,13 +13,17 @@ export class TransitoPage implements OnInit {
 
   @Input() stock: number;
   @Input() faltante: string;
+  @Input() SKU: string;
+  @Input() cliente: string;
 
   hayFaltante: boolean = false;
   hayBajoStock: boolean = false;
   justificacion: string = '';
+  inventario: number = 0;
 
   constructor( private popoverCtrl: PopoverController,
-               private tareas: TareasService ) { }
+               private tareas: TareasService,
+               private elia: EliaService ) { }
 
   ngOnInit() {
     this.justificacion = this.faltante;
@@ -26,6 +32,17 @@ export class TransitoPage implements OnInit {
     } else if (this.stock === 1){
       this.hayBajoStock = true;
     }
+    this.cargarInventario( this.cliente );
+  }
+
+  async cargarInventario( idCliente: string ){
+    let prod: Productos[] = [];
+    let productos: Productos[] = [];
+
+    prod = await this.elia.cargarProductos();
+    productos = prod.filter( d => d.idCliente === idCliente && d.id === this.SKU );
+    console.log( productos );
+    this.inventario = productos[0].stock;
   }
 
   salvar(){

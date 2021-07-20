@@ -38,6 +38,7 @@ export class Tab1Page {
       await modal.present();
       const {data} = await modal.onDidDismiss();
       if ( data.check ){
+        this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
         if (this.tareas.rutero[i].checkIn == null || this.tareas.rutero[i].checkBodega == null){
           this.geolocation.getCurrentPosition().then((resp) => {
             this.tareas.rutero[i].latitud = resp.coords.latitude;
@@ -58,7 +59,6 @@ export class Tab1Page {
   }
 
   async abrirFaltantes( i: number ){
-    this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
     if ( this.tareas.rutero[i].checkIn === null ){ 
       this.tareas.rutero[i].checkIn = new Date();
       // cargar visita anterior.
@@ -89,7 +89,7 @@ export class Tab1Page {
     const modal3 = await this.modalCtrl.create({
       component: BodegaPage,
       componentProps: {
-        'pdv': this.tareas.pdvs[i],
+        'pdv': this.tareas.pdvActivo,
         'i': i,
       },
       cssClass: 'my-custom-class'
@@ -102,10 +102,11 @@ export class Tab1Page {
   }
 
   async abrirResumen( i: number ){
+    this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
     const modal4 = await this.modalCtrl.create({
       component: ResumenPage,
       componentProps: {
-        'pdv': this.tareas.pdvs[i],
+        'pdv': this.tareas.pdvActivo,
         'i': i,
       },
       cssClass: 'my-custom-class'

@@ -6,13 +6,10 @@
 
 <ion-content>
   <ion-item>
-    <ion-label>Bodega: 5 Ud</ion-label>
+    <ion-label>Inventario</ion-label>
   </ion-item>
   <ion-item>
-    <ion-label>Transito: 150 Ud</ion-label>
-  </ion-item>
-  <ion-item>
-    <ion-label>CEDI: 450 Ud</ion-label>
+    <ion-label>Tienda: {{ inventario }}</ion-label>
   </ion-item>
 
   <ion-item *ngIf="hayFaltante">

@@ -73,7 +73,9 @@ export class BodegaPage implements OnInit {
       component: TransitoPage,
       componentProps: {
         'stock': this.tareas.rutero[this.i].detalle[j].stock,
-        'faltante': this.tareas.rutero[this.i].detalle[j].justificacion
+        'faltante': this.tareas.rutero[this.i].detalle[j].justificacion,
+        'SKU': this.tareas.rutero[this.i].detalle[j].idProducto,
+        'cliente': this.pdv.idWM,
       },
       cssClass: 'my-custom-class',
       event: ev,

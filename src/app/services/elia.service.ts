@@ -178,7 +178,7 @@ export class EliaService {
       resp => {
         console.log('ProductosBD', resp );
         resp.forEach(e => {
-          item = new Productos( e.id.toString(), e.idCliente, e.nombre, e.precio, e.codigoBarras, e.barrasCliente);
+          item = new Productos( e.id.toString(), e.idCliente, e.nombre, e.precio, e.codigoBarras, e.barrasCliente, e.stockMinimo);
           productos.push( item );
         });
         console.log( 'Arreglo', productos );

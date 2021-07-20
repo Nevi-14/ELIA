@@ -10,14 +10,14 @@ export class Productos {
     seleccionado: boolean;
     imagen: string;
 
-    constructor ( id: string, idCliente: string, nombre: string, precio: number, codBar: string, barCliente: string ){
+    constructor ( id: string, idCliente: string, nombre: string, precio: number, codBar: string, barCliente: string, stock: number ){
         this.id = id;
         this.idCliente = idCliente;
         this.nombre = nombre;
         this.precio = precio;
         this.codigoBarras = codBar;
         this.barrasCliente = barCliente;
-        this.stock = 0;
+        this.stock = stock;
         this.seleccionado = false;
         this.imagen = "../../../assets/icon/ok.png";
     }

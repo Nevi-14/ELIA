@@ -38,8 +38,8 @@ export class FaltantesPage implements OnInit {
 
   ngOnInit() {
     this.nombrePDV = this.pdv.nombre;
-    this.productos = SKUS.slice(0);
-    //this.cargarProductos( this.pdv.id );
+    //this.productos = SKUS.slice(0);
+    this.cargarProductos( this.pdv.idWM );
     this.linea = this.tareas.rutero[this.i].detalle.length;
     this.lineas = this.productos.length;
   }
@@ -56,6 +56,9 @@ export class FaltantesPage implements OnInit {
   }
 
   buscarProducto(){
+    let numTemp: number;     // Ambas variables numTemp y numStr se usan para quitarle los ceros a la izquierda al codigo de barras.
+    let numStr: string;
+
     if (this.texto.length > 0){
       if (isNaN(+this.texto)) {            // Se buscará por código de producto
         // Se recorre el arreglo para buscar coincidencias
@@ -94,9 +97,16 @@ export class FaltantesPage implements OnInit {
         console.log('Barcode data', barcodeData);
         if ( !barcodeData.cancelled ){
           texto = barcodeData.text;
-          const item = this.productos.find( d => d.codigoBarras === texto )
-          if ( item ){
-            this.busquedaProd.push(item);
+          // const item = this.productos.find( d => d.codigoBarras === texto );
+          this.productos.forEach( d => {
+            numTemp = +d.codigoBarras;
+            numStr = numTemp.toString();
+            if (texto.indexOf(numStr) >= 0){     // validamos que si el código de barras sin los ceros a la izquierda está contenido en el codigo leido del producto
+              this.busquedaProd.push(d);
+              console.log('Codigo similar: ', numStr);
+            }
+          });
+          if ( this.busquedaProd.length > 0 ){
             this.productoSelect(0);
           } else {
             this.tareas.presentAlertW('Scan', 'Producto no existe: ' + texto);
