@@ -11,6 +11,7 @@ export const environment = {
   TestURL: '_test',
   postURL: '.soportecr.xyz/api/',
   IMAURL: 'http://mercaderistas.soportecr.xyz/api/',
+  ArticulosURL: 'IMArticulos/',
   rutasURL: 'IMA_Rutas/',
   clientesURL: 'IMA_Clientes/',
   rolVisitaURL: 'IMA_Visitas/',

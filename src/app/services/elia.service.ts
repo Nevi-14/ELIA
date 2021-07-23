@@ -1,11 +1,11 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { Storage } from '@ionic/storage-angular';
 import { environment } from 'src/environments/environment';
 import { ClientesBD, PDV } from '../models/pdv';
-import { Productos, ProductosBD } from '../models/productos';
+import { Articulos, Productos, ProductosBD } from '../models/productos';
 import { RolVisita, Ruta } from '../models/ruta';
 import { DetalleVisita, RuteroBD, RuteroDetBD, VisitaDiaria } from '../models/rutero';
 import { TareasService } from './tareas.service';
@@ -15,10 +15,13 @@ import { TareasService } from './tareas.service';
 })
 export class EliaService {
 
+  loading: HTMLIonLoadingElement;
+
   constructor( private http: HttpClient,
                private storage: Storage,
                private modalCtrl: ModalController,
-               private tareas: TareasService ) {
+               private tareas: TareasService,
+               private loadingCtrl: LoadingController ) {
     this.crearBD();
   }
   
@@ -26,8 +29,23 @@ export class EliaService {
     await this.storage.create();
   }
 
+  private async presentaLoading( mensaje: string ){
+    this.loading = await this.loadingCtrl.create({
+      message: mensaje,
+    });
+    await this.loading.present();
+  }
+
+  private loadingDissmiss(){
+    this.loading.dismiss();
+  }
+
   guardarSKUS( productos: Productos[] ){
     this.storage.set( 'ELIAProductos', productos );
+  }
+
+  private guardarArticulos( productos: Articulos[] ){
+    this.storage.set( 'ELIArticulos', productos );
   }
 
   async cargarProductos(){
@@ -38,7 +56,13 @@ export class EliaService {
     return productos;
   }
 
+  async cargarArticulos(){
+    let productos: Articulos[] = [];
 
+    const prod = await this.storage.get( 'ELIArticulos' );
+    productos = prod;
+    return productos;
+  }
   
   private getISAURL( api: string, id: string ){
     let test: string = '';
@@ -173,17 +197,35 @@ export class EliaService {
     let item: Productos;
     let productos: Productos[] = [];
 
-    // this.presentaLoading('Sincronizando...');
+    this.presentaLoading('Sincronizando...');
     this.getProductos().subscribe(
       resp => {
         console.log('ProductosBD', resp );
         resp.forEach(e => {
-          item = new Productos( e.id.toString(), e.idCliente, e.nombre, e.precio, e.codigoBarras, e.barrasCliente, e.stockMinimo);
+          item = new Productos( e.id.toString(), e.idCliente, e.idProduc, e.nombre, e.precio, e.codigoBarras, e.barrasCliente, e.stockMinimo);
           productos.push( item );
         });
         console.log( 'Arreglo', productos );
         this.guardarSKUS( productos );
+        this.loadingDissmiss();
         this.modalCtrl.dismiss({'check': true});
+      }, error => {
+        console.log(error.message);
+        this.loadingDissmiss();
+      }
+    );
+  }
+
+  private getArticulos(){
+    const URL = this.getISAURL( environment.ArticulosURL, '' );
+    return this.http.get<Articulos[]>( URL );
+  }
+
+  syncArticulos(){
+    this.getArticulos().subscribe(
+      resp => {
+        console.log('Productos Isleña ', resp );
+        this.guardarArticulos( resp );
       }, error => {
         console.log(error.message);
       }

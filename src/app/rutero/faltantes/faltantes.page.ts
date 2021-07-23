@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AlertController, ModalController, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
-import { Productos, SKUS } from 'src/app/models/productos';
+import { Articulos, Productos } from 'src/app/models/productos';
 import { DetalleVisita } from 'src/app/models/rutero';
 import { TareasService } from 'src/app/services/tareas.service';
 import { environment } from 'src/environments/environment';
@@ -19,7 +19,8 @@ export class FaltantesPage implements OnInit {
   @Input() pdv: PDV;
   @Input() i: number;
 
-  productos: Productos[] = [];                          // Lista de articulos del punto de venta
+  productos: Productos[] = [];                          // Lista de articulos del punto de venta en Mercaderistas
+  articulos: Articulos[] = [];                          // Lista de articulos de islena en Softland
   nombrePDV: string = '';                              // Nombre del Punto de Venta
   texto: string = '';                                      // texto de busqueda
   mostrarListaProd: boolean = false;                 // True = Se debe mostrar la lista de productos a buscar
@@ -38,8 +39,8 @@ export class FaltantesPage implements OnInit {
 
   ngOnInit() {
     this.nombrePDV = this.pdv.nombre;
-    //this.productos = SKUS.slice(0);
     this.cargarProductos( this.pdv.idWM );
+    this.cargarArticulos();
     this.linea = this.tareas.rutero[this.i].detalle.length;
     this.lineas = this.productos.length;
   }
@@ -55,12 +56,17 @@ export class FaltantesPage implements OnInit {
     }
   }
 
+  async cargarArticulos(){
+    this.articulos = await this.elia.cargarArticulos();
+    console.log( this.articulos );
+  }
+
   buscarProducto(){
     let numTemp: number;     // Ambas variables numTemp y numStr se usan para quitarle los ceros a la izquierda al codigo de barras.
     let numStr: string;
 
     if (this.texto.length > 0){
-      if (isNaN(+this.texto)) {            // Se buscará por código de producto
+      if (isNaN(+this.texto)) {            // Se buscará por nombre de producto
         // Se recorre el arreglo para buscar coincidencias
         for (let i = 0; i < this.productos.length; i++) {
           if (this.productos[i].nombre.toLowerCase().indexOf( this.texto.toLowerCase(), 0 ) >= 0) {
@@ -92,12 +98,29 @@ export class FaltantesPage implements OnInit {
       }
     } else {                           // Se abre el lector de códigos de barras
       this.mostrarListaProd = false;
-      let texto: string = '';
+      this.busquedaProd = [];
+      let barras: string = '';
       this.barcodeScanner.scan().then(barcodeData => {
         console.log('Barcode data', barcodeData);
         if ( !barcodeData.cancelled ){
-          texto = barcodeData.text;
+          barras = barcodeData.text;
           // const item = this.productos.find( d => d.codigoBarras === texto );
+
+          const i = this.articulos.findIndex( d => d.codigO_BARRAS_VENT === barras );
+          if ( i >= 0 ){
+            const j = this.productos.findIndex( d => d.idIslena === this.articulos[i].articulo );
+            if ( j >= 0 ){
+              this.busquedaProd.push( this.productos[j] );
+            } else {
+              this.tareas.presentAlertW('Scan', 'Producto no existe en lista de la tienda: ' + barras);
+              this.texto = '';
+            }
+          } else {
+            this.tareas.presentAlertW('Scan', 'Producto no existe en lista de Isleña: ' + barras);
+            this.texto = '';
+          }
+
+          /*
           this.productos.forEach( d => {
             numTemp = +d.codigoBarras;
             numStr = numTemp.toString();
@@ -105,11 +128,10 @@ export class FaltantesPage implements OnInit {
               this.busquedaProd.push(d);
               console.log('Codigo similar: ', numStr);
             }
-          });
+          });*/
+
           if ( this.busquedaProd.length > 0 ){
             this.productoSelect(0);
-          } else {
-            this.tareas.presentAlertW('Scan', 'Producto no existe: ' + texto);
           }
         }
        }).catch(err => {
