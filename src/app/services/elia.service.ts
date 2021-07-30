@@ -246,6 +246,7 @@ export class EliaService {
   insertRutero( rutero: VisitaDiaria ){
     let item: RuteroBD = {
       ID:             '',
+      ruta:           this.tareas.varConfig.ruta,
       idCliente:      rutero.idPDV,
       nombre:         rutero.nombre,
       checkIn:        rutero.checkIn,
@@ -254,7 +255,8 @@ export class EliaService {
       latitud:        rutero.latitud,
       longitud:       rutero.longitud,
       idMercaderista: rutero.idMercaderista,
-      observaciones:  rutero.observaciones
+      observaciones:  rutero.observaciones,
+      orden:          rutero.orden
     }
 
     let day = new Date(rutero.checkIn).getDate();
@@ -273,7 +275,7 @@ export class EliaService {
     rutero.ID = item.ID;
     const fecha = rutero.checkIn;
     item.checkIn = new Date(fecha.getTime() - (fecha.getTimezoneOffset() * 60000));
-    this.postRutero( item ).subscribe(
+    this.putRutero( item ).subscribe(
       resp => {
         console.log('Rutero Insertado...', resp);
       }, error => {
@@ -298,6 +300,7 @@ export class EliaService {
     let item: RuteroBD = {
       ID:             rutero.ID,
       idCliente:      rutero.idPDV,
+      ruta:           this.tareas.varConfig.ruta,
       nombre:         rutero.nombre,
       checkIn:        rutero.checkIn,
       checkBodega:    rutero.checkBodega,
@@ -305,7 +308,8 @@ export class EliaService {
       latitud:        rutero.latitud,
       longitud:       rutero.longitud,
       idMercaderista: rutero.idMercaderista,
-      observaciones:  rutero.observaciones
+      observaciones:  rutero.observaciones,
+      orden:          rutero.orden
     }
     const fechaIn = rutero.checkIn;
     const fechaBodega = rutero.checkBodega;

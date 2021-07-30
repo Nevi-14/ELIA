@@ -36,18 +36,20 @@ export class VisitaDiaria {
 }
 
 export class DetalleVisita {
-    constructor ( public idProducto: string, 
-                  public nombre: string, 
-                  public codBarras: string, 
+    constructor ( public idProducto:    string, 
+                  public nombre:        string, 
+                  public codBarras:     string, 
                   public barrasCliente: string, 
-                  public stock: number = 0, 
-                  public seleccionado: boolean = false,
-                  public imagen: string = '../../../assets/icon/ok.png',
+                  public existencias:   number,
+                  public stock:         number = 0, 
+                  public seleccionado:  boolean = false,
+                  public imagen:        string = '../../../assets/icon/ok.png',
                   public justificacion: string = null ){}
 }
 
 export interface RuteroBD {
     ID:             string;
+    ruta:           string;
     idCliente:      string;
     nombre:         string;
     checkIn:        Date;
@@ -57,6 +59,7 @@ export interface RuteroBD {
     longitud:       number;
     idMercaderista: string;
     observaciones:  string;
+    orden:          number;
 }
 
 export class RuteroDetBD {

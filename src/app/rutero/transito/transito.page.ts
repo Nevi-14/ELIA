@@ -14,12 +14,12 @@ export class TransitoPage implements OnInit {
   @Input() stock: number;
   @Input() faltante: string;
   @Input() SKU: string;
+  @Input() inventario: number;
   @Input() cliente: string;
 
   hayFaltante: boolean = false;
   hayBajoStock: boolean = false;
   justificacion: string = '';
-  inventario: number = 0;
 
   constructor( private popoverCtrl: PopoverController,
                private tareas: TareasService,
@@ -32,10 +32,9 @@ export class TransitoPage implements OnInit {
     } else if (this.stock === 1){
       this.hayBajoStock = true;
     }
-    this.cargarInventario( this.cliente );
   }
 
-  async cargarInventario( idCliente: string ){
+  /*async cargarInventario( idCliente: string ){
     let prod: Productos[] = [];
     let productos: Productos[] = [];
 
@@ -43,7 +42,7 @@ export class TransitoPage implements OnInit {
     productos = prod.filter( d => d.idCliente === idCliente && d.id === this.SKU );
     console.log( productos );
     this.inventario = productos[0].stock;
-  }
+  }*/
 
   salvar(){
     if (this.hayFaltante && this.justificacion !== ''){

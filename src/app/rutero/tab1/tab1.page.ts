@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { LoadingController, ModalController } from '@ionic/angular';
 import { TareasService } from 'src/app/services/tareas.service';
 import { BodegaPage } from '../bodega/bodega.page';
 import { CheckinPage } from '../checkin/checkin.page';
@@ -16,11 +16,13 @@ import { EliaService } from 'src/app/services/elia.service';
 export class Tab1Page {
 
   hora: Date = new Date();
+  loading: HTMLIonLoadingElement;
 
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
                private bd: EliaService,
-               private geolocation: Geolocation ) {
+               private geolocation: Geolocation,
+               private loadingCtrl: LoadingController ) {
     this.tareas.cargarClientes();
     this.tareas.cargarRutero();
   }
@@ -40,6 +42,7 @@ export class Tab1Page {
       if ( data.check ){
         this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
         if (this.tareas.rutero[i].checkIn == null || this.tareas.rutero[i].checkBodega == null){
+          this.presentaLoading( 'Check In...');
           this.geolocation.getCurrentPosition().then((resp) => {
             this.tareas.rutero[i].latitud = resp.coords.latitude;
             this.tareas.rutero[i].longitud = resp.coords.longitude;
@@ -125,6 +128,18 @@ export class Tab1Page {
      }).catch((error) => {
        console.log('Error getting location', error);
      });
+  }
+
+  async presentaLoading( message: string ){
+    this.loading = await this.loadingCtrl.create({
+      message,
+      duration: 3000,
+    });
+    await this.loading.present();
+  }
+
+  loadingDissmiss(){
+    this.loading.dismiss();
   }
 
 }

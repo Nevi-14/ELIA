@@ -119,17 +119,6 @@ export class FaltantesPage implements OnInit {
             this.tareas.presentAlertW('Scan', 'Producto no existe en lista de Isleña: ' + barras);
             this.texto = '';
           }
-
-          /*
-          this.productos.forEach( d => {
-            numTemp = +d.codigoBarras;
-            numStr = numTemp.toString();
-            if (texto.indexOf(numStr) >= 0){     // validamos que si el código de barras sin los ceros a la izquierda está contenido en el codigo leido del producto
-              this.busquedaProd.push(d);
-              console.log('Codigo similar: ', numStr);
-            }
-          });*/
-
           if ( this.busquedaProd.length > 0 ){
             this.productoSelect(0);
           }
@@ -155,7 +144,7 @@ export class FaltantesPage implements OnInit {
   }
 
   agregarDetalle( item: Productos ){
-    const faltante = new DetalleVisita(item.id, item.nombre, item.codigoBarras, item.barrasCliente);
+    const faltante = new DetalleVisita(item.id, item.nombre, item.codigoBarras, item.barrasCliente, item.stock);
     this.tareas.rutero[this.i].detalle.unshift(faltante);
     this.linea += 1;
     if (this.linea === this.lineas){
@@ -200,7 +189,7 @@ export class FaltantesPage implements OnInit {
     this.productos.forEach( d => {
       existe = this.tareas.rutero[this.i].detalle.findIndex( e => e.idProducto === d.id );
       if ( existe < 0 ){
-        item = new DetalleVisita( d.id, d.nombre, d.codigoBarras, d.barrasCliente, -1, false, environment.faltante );
+        item = new DetalleVisita( d.id, d.nombre, d.codigoBarras, d.barrasCliente, d.stock, -1, false, environment.faltante );
         this.tareas.rutero[this.i].detalle.push( item );
       }
     });

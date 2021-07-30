@@ -4,7 +4,7 @@
       <ion-button (click)="presentAlertSalir()" fill="clear" slot="start">
         <ion-icon name="chevron-back-outline"></ion-icon>
       </ion-button>
-      <ion-title class="ion-text-center">Bodega</ion-title>
+      <ion-title class="ion-text-center">{{etiqueta}}</ion-title>
       <ion-button (click)="salvar()" fill="clear" slot="end" size="medium">
         <ion-icon name="save-outline" size="large" [color]="!sinSalvar ? 'dark': 'danger'" ></ion-icon>
       </ion-button>
@@ -22,7 +22,7 @@
 
   <ion-list>
 
-    <ion-item *ngFor="let item of tareas.rutero[i].detalle; let j = index">
+    <ion-item *ngFor="let item of detalleRut; let j = index">
       <ion-label (click)="transito( $event, j )" class="ion-text-wrap" [color]="item.justificacion == null ? 'danger' : 'dark'">
         {{ item.idProducto }} - {{ item.nombre }}
       </ion-label>
@@ -47,3 +47,9 @@
   </ion-button>
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar color="primary">
+    <ion-title slot="end">Líneas {{linea}} de {{lineas}}</ion-title>
+  </ion-toolbar>
+</ion-footer>
