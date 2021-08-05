@@ -92,6 +92,8 @@ export class BodegaPage implements OnInit {
         'SKU': this.detalleRut[j].nombre,
         'inventario': this.detalleRut[j].existencias,
         'cliente': this.pdv.idWM,
+        'vencimiento': this.detalleRut[j].vencimiento,
+        'cant_Vence': this.detalleRut[j].cant_Vence
       },
       cssClass: 'my-custom-class',
       event: ev,

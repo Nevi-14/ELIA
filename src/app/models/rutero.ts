@@ -44,7 +44,9 @@ export class DetalleVisita {
                   public stock:         number = 0, 
                   public seleccionado:  boolean = false,
                   public imagen:        string = '../../../assets/icon/ok.png',
-                  public justificacion: string = null ){}
+                  public justificacion: string = null,
+                  public vencimiento:   Date = null,
+                  public cant_Vence:    number = null ){}
 }
 
 export interface RuteroBD {

@@ -16,6 +16,8 @@ export class TransitoPage implements OnInit {
   @Input() SKU: string;
   @Input() inventario: number;
   @Input() cliente: string;
+  @Input() vencimiento: Date;
+  @Input() cant_Vence: number;
 
   hayFaltante: boolean = false;
   hayBajoStock: boolean = false;

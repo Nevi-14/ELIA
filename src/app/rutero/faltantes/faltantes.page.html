@@ -35,17 +35,25 @@
     </ion-item>
   </ion-list>
 
-  <ion-list>
-
-    <ion-item *ngFor="let item of tareas.rutero[i].detalle; let j = index">
-      <ion-label class="ion-text-wrap">
-        {{ item.idProducto }} - {{ item.nombre }}
-      </ion-label>
-      <ion-thumbnail slot="end" (click)="cambioStock(j)">
-        <img [src]="item.imagen">
-      </ion-thumbnail>
-    </ion-item>
-
+  <ion-list #myList>
+    <ion-item-sliding *ngFor="let item of tareas.rutero[i].detalle; let j = index">
+      
+      <ion-item-options side="start">
+        <ion-item-option color="warning" (click)="vencimientos(j)">
+          <ion-icon slot="icon-only" name="calendar"></ion-icon>
+        </ion-item-option>
+      </ion-item-options>
+  
+      <ion-item>
+        <ion-label class="ion-text-wrap">
+          {{ item.idProducto }} - {{ item.nombre }}
+        </ion-label>
+        <ion-thumbnail slot="end" (click)="cambioStock(j)">
+          <img [src]="item.imagen">
+        </ion-thumbnail>
+      </ion-item>
+      
+    </ion-item-sliding>
   </ion-list>
 
 </ion-content>

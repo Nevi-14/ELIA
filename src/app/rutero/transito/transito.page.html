@@ -11,6 +11,12 @@
   <ion-item>
     <ion-label>Tienda: {{ inventario }}</ion-label>
   </ion-item>
+  <ion-item>
+    <ion-label>Vence: {{ vencimiento | date : 'shortDate' }}</ion-label>
+  </ion-item>
+  <ion-item>
+    <ion-label>Cantidad: {{ cant_Vence }}</ion-label>
+  </ion-item>
 
   <ion-item *ngIf="hayFaltante">
     <ion-select interface="action-sheet" [(ngModel)]="justificacion">

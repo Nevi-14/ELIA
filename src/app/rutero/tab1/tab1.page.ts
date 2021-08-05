@@ -85,7 +85,7 @@ export class Tab1Page {
   }
 
   async abrirBodega( i: number ){
-    const temp = this.tareas.rutero[i].detalle.filter( d => d.stock !== 0 );
+    const temp = this.tareas.rutero[i].detalle.filter( d => d.stock !== 0 || d.vencimiento !== null );
     this.tareas.rutero[i].detalle = temp.slice(0);
     this.tareas.rutero[i].checkBodega = new Date();
     this.tareas.guardarVisitas();

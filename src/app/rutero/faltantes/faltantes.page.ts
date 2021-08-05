@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { AlertController, ModalController, PopoverController } from '@ionic/angular';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { AlertController, IonList, ModalController, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
 import { Articulos, Productos } from 'src/app/models/productos';
 import { DetalleVisita } from 'src/app/models/rutero';
@@ -29,6 +29,8 @@ export class FaltantesPage implements OnInit {
   linea: number = 0;                              // Número de lineas ingresadas
   lineas: number = 0;                            // Número de líneas a ingresar
   completo: boolean = false;                    // True cuando se completaron la totalidad de líneas ingresadas en el detalle del rutero
+
+  @ViewChild('myList') ionList: IonList;
 
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
@@ -62,8 +64,6 @@ export class FaltantesPage implements OnInit {
   }
 
   buscarProducto(){
-    let numTemp: number;     // Ambas variables numTemp y numStr se usan para quitarle los ceros a la izquierda al codigo de barras.
-    let numStr: string;
 
     if (this.texto.length > 0){
       if (isNaN(+this.texto)) {            // Se buscará por nombre de producto
@@ -247,6 +247,52 @@ export class FaltantesPage implements OnInit {
       });
       await popover.present();
     }
+  }
+
+  async vencimientos( j: number ){
+    const alert = await this.alertCtl.create({
+      cssClass: 'my-custom-class',
+      header: 'Vecimientos',
+      message: this.tareas.rutero[this.i].detalle[j].nombre,
+      inputs: [
+        {
+          name: 'vencimiento',
+          value: this.tareas.rutero[this.i].detalle[j].vencimiento,
+          id: 'vencimiento',
+          type: 'date'
+        },
+        {
+          name: 'cantidad',
+          value: this.tareas.rutero[this.i].detalle[j].cant_Vence,
+          id: 'cantidad',
+          type: 'number'
+        }],
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+            this.ionList.closeSlidingItems();
+          }
+        }, {
+          text: 'Ok',
+          handler: (data) => {
+            if ( data.cantidad !== '' ){
+              this.tareas.rutero[this.i].detalle[j].cant_Vence = +data.cantidad;
+            }
+            if ( data.vencimiento !== '' ){
+              this.tareas.rutero[this.i].detalle[j].vencimiento = new Date(data.vencimiento);
+            }
+            console.log(this.tareas.rutero[this.i].detalle[j]);
+            this.ionList.closeSlidingItems();
+          }
+        }
+      ]
+    });
+    await alert.present();
+    
   }
 
 }
