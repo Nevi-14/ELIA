@@ -68,7 +68,6 @@ export class AdminPage implements OnInit {
     if ( this.tareas.varConfig.ruta !== 'ME00'){
       this.tareas.guardarVarConfig();
       this.elia.syncClientes( this.tareas.varConfig.ruta );
-      this.elia.syncProductos();
       this.elia.syncArticulos();
       if (localStorage.getItem('ELIAvisitaDiaria')){
         localStorage.removeItem('ELIAvisitaDiaria');

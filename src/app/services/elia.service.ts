@@ -40,8 +40,17 @@ export class EliaService {
     this.loading.dismiss();
   }
 
-  guardarSKUS( productos: Productos[] ){
-    this.storage.set( 'ELIAProductos', productos );
+  async guardarSKUS( productos: Productos[] ){
+    let produc: Productos[] = [];
+    let produc2: Productos[] = [];
+
+    produc = await this.cargarProductos();
+    if (produc !== null ){
+      produc2 = produc.concat(productos);
+    } else {
+      produc2 = productos.slice(0);
+    }
+    this.storage.set( 'ELIAProductos', produc2 );
   }
 
   private guardarArticulos( productos: Articulos[] ){
@@ -94,6 +103,7 @@ export class EliaService {
   syncClientes( ruta: string ){
     let cliente: PDV;
     let clientes: PDV[] = [];
+    let i: number = 0;
     const dia = new Date().getDay();
     console.log('Dia: ', dia);
 
@@ -112,6 +122,11 @@ export class EliaService {
         localStorage.setItem('ELIAclientes', JSON.stringify(clientes));
         this.tareas.cargarClientes();
         this.syncRolVisita( ruta, this.getDia( dia ) );
+        const max = clientes.length;
+        clientes.forEach( d => {
+          this.syncProductos( d.idWM, i, max );
+          i++
+        });
       }, error => {
         console.log(error.message);
       }
@@ -188,30 +203,34 @@ export class EliaService {
     this.tareas.pdvs[i].diasVisita = visitas.join('');
   }
 
-  private getProductos(){
-    const URL = this.getIMAURL( environment.productosURL, '' );
+  private getProductos( idCliente: string ){
+    const URL = this.getIMAURL( environment.productosURL, idCliente );
     return this.http.get<ProductosBD[]>( URL );
   }
 
-  syncProductos(){
+  syncProductos( idCliente: string, i: number, max: number ){
     let item: Productos;
     let productos: Productos[] = [];
 
-    this.presentaLoading('Sincronizando...');
-    this.getProductos().subscribe(
+    if ( i === 0 ){
+      this.presentaLoading('Sincronizando...');
+      this.storage.remove('ELIAProductos');
+    }
+    this.getProductos( idCliente ).subscribe(
       resp => {
-        console.log('ProductosBD', resp );
+        console.log(`ProductosBD (${idCliente})`, resp );
         resp.forEach(e => {
           item = new Productos( e.id.toString(), e.idCliente, e.idProduc, e.nombre, e.precio, e.codigoBarras, e.barrasCliente, e.stockMinimo);
           productos.push( item );
         });
-        console.log( 'Arreglo', productos );
         this.guardarSKUS( productos );
-        this.loadingDissmiss();
-        this.modalCtrl.dismiss({'check': true});
+        if ( i === max-1 ){
+          this.loadingDissmiss();
+          this.modalCtrl.dismiss({'check': true});
+        }
       }, error => {
         console.log(error.message);
-        this.loadingDissmiss();
+        // this.loadingDissmiss();
       }
     );
   }
