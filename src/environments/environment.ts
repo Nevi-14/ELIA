@@ -4,7 +4,6 @@
 
 export const environment = {
   production: false,
-  prdMode: true,
   maxCharCodigoProd: 6,
   adminClave: '123456',
   preURL: 'http://api_isa',
@@ -15,13 +14,14 @@ export const environment = {
   rutasURL: 'IMA_Rutas/',
   clientesURL: 'IMA_Clientes/',
   rolVisitaURL: 'IMA_Visitas/',
-  productosURL: 'productos/',
+  productosURL: 'IMA_Productos/',
   ruteroPostURL: 'Rutero/',
   detalleRutURL: 'RuteroDet/',
   faltante: "../../../assets/icon/faltante.png",
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
-  version: "1.0.0"
+  version: "1.0.0",
+  prdMode: true,
 };
 
 /*

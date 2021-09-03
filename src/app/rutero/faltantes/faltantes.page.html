@@ -30,7 +30,7 @@
   </ion-item>
 
   <ion-list *ngIf="mostrarListaProd">
-    <ion-item *ngFor="let item of busquedaProd; let i = index" color="light" (click)="productoSelect(i)">
+    <ion-item *ngFor="let item of busquedaProd; let i = index" color="light" (click)="listaProducClick(i)">
       <ion-label class="ion-text-wrap">{{item.id}}-{{item.nombre}}</ion-label>
     </ion-item>
   </ion-list>

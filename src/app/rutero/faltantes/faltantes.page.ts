@@ -64,10 +64,9 @@ export class FaltantesPage implements OnInit {
   }
 
   buscarProducto(){
-
     if (this.texto.length > 0){
       if (isNaN(+this.texto)) {            // Se buscará por nombre de producto
-        // Se recorre el arreglo para buscar coincidencias
+        // Se recorre el arreglo para buscar coincidencias y se llena el arreglo busquedaProd[]
         for (let i = 0; i < this.productos.length; i++) {
           if (this.productos[i].nombre.toLowerCase().indexOf( this.texto.toLowerCase(), 0 ) >= 0) {
               this.busquedaProd.push(this.productos[i]);
@@ -87,7 +86,7 @@ export class FaltantesPage implements OnInit {
           }
         }
       }
-      if (this.busquedaProd.length === 0){                    // no hay coincidencias
+      if (this.busquedaProd.length === 0){                    // no hay coincidencias en la busqueda
         this.tareas.presentAlertW( this.texto, 'No hay coincidencias' );
         this.texto = '';
         this.mostrarListaProd = false;
@@ -104,8 +103,6 @@ export class FaltantesPage implements OnInit {
         console.log('Barcode data', barcodeData);
         if ( !barcodeData.cancelled ){
           barras = barcodeData.text;
-          // const item = this.productos.find( d => d.codigoBarras === texto );
-
           const i = this.articulos.findIndex( d => d.codigO_BARRAS_VENT === barras );
           if ( i >= 0 ){
             const j = this.productos.findIndex( d => d.idIslena === this.articulos[i].articulo );
@@ -127,6 +124,15 @@ export class FaltantesPage implements OnInit {
            console.log('Error', err);
            this.tareas.presentAlertW('Scan', 'Error al abrir el Scaner');
        });
+    }
+  }
+
+  listaProducClick( i: number ){
+    if (environment.prdMode){
+      this.mostrarListaProd = false;             // Y se activa el flag de mostrar producto
+      this.busquedaProd = [];
+    } else {
+      this.productoSelect(i);
     }
   }
 
