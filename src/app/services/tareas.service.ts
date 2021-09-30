@@ -18,12 +18,20 @@ export class TareasService {
   loading: HTMLIonLoadingElement;
 
   varConfig: Ruta = {
-    ruta: 'ME00',
-    handHeld: 'HH00',
-    bodega: 'ND',
-    agente: 'ND',
-    pedido: '',
-    devolucion: ''
+    ruta:           'ME00',
+    handHeld:       'HH00',
+    bodega:         'ND',
+    agente:         'ND',
+    pedido:         '',
+    devolucion:     '',
+    horaSincroniza: null,
+    horaAlmuerzo:   null,
+    latitud1:       null,
+    longitud1:      null,
+    idMercarista:   null,
+    latitud2:       null,
+    longitud2:      null,
+    almuerzoTime:   false,
   }
 
   constructor( private alertController: AlertController,
@@ -38,6 +46,7 @@ export class TareasService {
 
   guardarVarConfig(){
     localStorage.setItem('ELIAconfig', JSON.stringify(this.varConfig));
+    console.log(this.varConfig);
   }
 
   cargarClientes(){

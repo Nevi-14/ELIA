@@ -4,6 +4,7 @@ import { EliaService } from 'src/app/services/elia.service';
 import { TareasService } from 'src/app/services/tareas.service';
 import { environment } from 'src/environments/environment';
 import { RutasPage } from '../rutas/rutas.page';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
 @Component({
   selector: 'app-admin',
@@ -19,6 +20,7 @@ export class AdminPage implements OnInit {
   constructor( private tareas: TareasService,
                private elia: EliaService,
                private modalCtrl: ModalController,
+               private geolocation: Geolocation,
                private popoverCtrl: PopoverController ) { }
 
   ngOnInit() {
@@ -65,16 +67,26 @@ export class AdminPage implements OnInit {
   }
 
   sincronizar(){
-    if ( this.tareas.varConfig.ruta !== 'ME00'){
-      this.tareas.guardarVarConfig();
-      this.elia.syncClientes( this.tareas.varConfig.ruta );
-      this.elia.syncArticulos();
-      if (localStorage.getItem('ELIAvisitaDiaria')){
-        localStorage.removeItem('ELIAvisitaDiaria');
+    this.geolocation.getCurrentPosition().then((resp) => {
+      this.tareas.varConfig.latitud1 = resp.coords.latitude;
+      this.tareas.varConfig.longitud1 = resp.coords.longitude;
+      if ( this.tareas.varConfig.ruta !== 'ME00'){
+        const fecha = new Date();
+        this.tareas.varConfig.horaSincroniza = new Date(new Date(fecha).getTime() - (new Date(fecha).getTimezoneOffset() * 60000));
+        this.tareas.guardarVarConfig();
+        this.elia.syncVisitas( this.tareas.varConfig );
+        this.elia.syncClientes( this.tareas.varConfig.ruta, true );
+        this.elia.syncArticulos();
+        if (localStorage.getItem('ELIAvisitaDiaria')){
+          localStorage.removeItem('ELIAvisitaDiaria');
+        }
+      } else {
+        this.tareas.presentAlertW('Sincronización', 'La aplicación no tiene una ruta definda...');
       }
-    } else {
-      this.tareas.presentAlertW('Sincronización', 'Debe seleccionar una ruta...');
-    }
+    }).catch((error) => {
+       console.log('Error getting location', error);
+       this.tareas.presentAlertW('Sincronización', 'Error de GPS...!!!')
+    });
   }
 
   salir(){

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LoadingController, ModalController } from '@ionic/angular';
+import { AlertController, LoadingController, ModalController } from '@ionic/angular';
 import { TareasService } from 'src/app/services/tareas.service';
 import { BodegaPage } from '../bodega/bodega.page';
 import { CheckinPage } from '../checkin/checkin.page';
@@ -7,6 +7,7 @@ import { FaltantesPage } from '../faltantes/faltantes.page';
 import { ResumenPage } from '../resumen/resumen.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { EliaService } from 'src/app/services/elia.service';
+import { AlmuerzoPage } from '../almuerzo/almuerzo.page';
 
 @Component({
   selector: 'app-tab1',
@@ -20,11 +21,17 @@ export class Tab1Page {
 
   constructor( private modalCtrl: ModalController,
                private tareas: TareasService,
+               private elia: EliaService,
                private bd: EliaService,
                private geolocation: Geolocation,
+               private alertCtrl: AlertController,
                private loadingCtrl: LoadingController ) {
     this.tareas.cargarClientes();
     this.tareas.cargarRutero();
+    if (this.tareas.varConfig.almuerzoTime){
+      console.log('Estamos en hora de almuerzo');
+      this.activarAlmuerzo();
+    }
   }
 
   async checkIn( i: number ){
@@ -59,6 +66,50 @@ export class Tab1Page {
     } else {
       this.abrirResumen( i );
     }
+  }
+
+  async horaAlmuerzo(){
+    const alert = await this.alertCtrl.create({
+      cssClass: 'my-custom-class',
+      header: 'Hora de Almuerzo',
+      message: 'Favor Confirmar que estará tomando a partir de este momento, su hora de almuerzo.',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Si',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.activarAlmuerzo();
+          }
+        }
+      ]
+    });
+    await alert.present();
+  }
+
+  async activarAlmuerzo(){
+    if (!this.tareas.varConfig.almuerzoTime){
+      this.tareas.varConfig.horaAlmuerzo = new Date();
+      this.tareas.varConfig.almuerzoTime = true;
+      this.tareas.guardarVarConfig();
+      this.elia.updateVisitas( this.tareas.varConfig );
+    }
+    const modal = await this.modalCtrl.create({
+      component: AlmuerzoPage,
+      componentProps: {
+        'crono': 60
+      },
+      cssClass: 'my-custom-class'
+    });
+    await modal.present();
+    const {data} = await modal.onDidDismiss();
+    
   }
 
   async abrirFaltantes( i: number ){

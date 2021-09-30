@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   maxCharCodigoProd: 6,
-  adminClave: '123456',
+  adminClave: '@dmin2021*',
   preURL: 'http://api_isa',
   TestURL: '_test',
   postURL: '.soportecr.xyz/api/',
@@ -14,6 +14,7 @@ export const environment = {
   rutasURL: 'IMA_Rutas/',
   clientesURL: 'IMA_Clientes/',
   rolVisitaURL: 'IMA_Visitas/',
+  visitaDiaria: 'Visita/',
   productosURL: 'IMA_Productos/',
   ruteroPostURL: 'Rutero/',
   detalleRutURL: 'RuteroDet/',

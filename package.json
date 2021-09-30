@@ -28,6 +28,7 @@
     "@ionic/storage": "^3.0.4",
     "@ionic/storage-angular": "^3.0.6",
     "cordova-plugin-geolocation": "^4.1.0",
+    "countdown": "^2.6.0",
     "phonegap-plugin-barcodescanner": "^8.1.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",

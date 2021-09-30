@@ -6,7 +6,7 @@ import { Storage } from '@ionic/storage-angular';
 import { environment } from 'src/environments/environment';
 import { ClientesBD, PDV } from '../models/pdv';
 import { Articulos, Productos, ProductosBD } from '../models/productos';
-import { RolVisita, Ruta } from '../models/ruta';
+import { RolVisita, Ruta, Visita } from '../models/ruta';
 import { DetalleVisita, RuteroBD, RuteroDetBD, VisitaDiaria } from '../models/rutero';
 import { TareasService } from './tareas.service';
 
@@ -100,14 +100,14 @@ export class EliaService {
     return this.http.get<ClientesBD[]>( URL );
   }
 
-  syncClientes( ruta: string ){
+  syncClientes( ruta: string, admin: boolean ){   // admin = true si se invoca la sync desde Admin o false de lo contrario
     let cliente: PDV;
     let clientes: PDV[] = [];
     let i: number = 0;
     const dia = new Date().getDay();
     console.log('Dia: ', dia);
 
-    //this.presentaLoading('Sincronizando...');
+    this.presentaLoading('Sincronizando Clientes...');
     this.getClientes(ruta).subscribe(
       resp => {
         console.log('ClientesBD', resp );
@@ -124,7 +124,7 @@ export class EliaService {
         this.syncRolVisita( ruta, this.getDia( dia ) );
         const max = clientes.length;
         clientes.forEach( d => {
-          this.syncProductos( d.idWM, i, max );
+          this.syncProductos( d.idWM, i, max, admin );
           i++
         });
       }, error => {
@@ -208,12 +208,11 @@ export class EliaService {
     return this.http.get<ProductosBD[]>( URL );
   }
 
-  syncProductos( idCliente: string, i: number, max: number ){
+  syncProductos( idCliente: string, i: number, max: number, admin: boolean ){
     let item: Productos;
     let productos: Productos[] = [];
 
     if ( i === 0 ){
-      this.presentaLoading('Sincronizando...');
       this.storage.remove('ELIAProductos');
     }
     this.getProductos( idCliente ).subscribe(
@@ -225,12 +224,14 @@ export class EliaService {
         });
         this.guardarSKUS( productos );
         if ( i === max-1 ){
-          this.loadingDissmiss();
-          this.modalCtrl.dismiss({'check': true});
+          if (admin){                                      // En admin el rutero se carga al salir del modal.  En Sincronización de Mecadristas se hace acá
+            this.modalCtrl.dismiss({'check': true});
+          } else {
+            this.tareas.cargarRutero();
+          }
         }
       }, error => {
         console.log(error.message);
-        // this.loadingDissmiss();
       }
     );
   }
@@ -245,8 +246,10 @@ export class EliaService {
       resp => {
         console.log('Productos Isleña ', resp );
         this.guardarArticulos( resp );
+        this.loadingDissmiss();
       }, error => {
         console.log(error.message);
+        this.loadingDissmiss();
       }
     );
   }
@@ -260,6 +263,22 @@ export class EliaService {
       }
     };
     return this.http.post( URL, JSON.stringify(rutero), options );
+  }
+
+  private getID( fecha: Date ){
+    let day = new Date(fecha).getDate();
+    let month = new Date(fecha).getMonth() + 1;
+    let year = new Date(fecha).getFullYear();
+    let dia: string = day.toString();
+    let mes: string = month.toString();
+
+    if ( month >= 0 && month <= 9 ) {
+      mes = `0${month}`;
+    }
+    if ( day >= 0 && day <= 9 ){
+      dia = `0${day}`;
+    }
+    return `${year}${mes}${dia}`
   }
 
   insertRutero( rutero: VisitaDiaria ){
@@ -278,19 +297,7 @@ export class EliaService {
       orden:          rutero.orden
     }
 
-    let day = new Date(rutero.checkIn).getDate();
-    let month = new Date(rutero.checkIn).getMonth() + 1;
-    let year = new Date(rutero.checkIn).getFullYear();
-    let dia: string = day.toString();
-    let mes: string = month.toString();
-
-    if ( month >= 0 && month <= 9 ) {
-      mes = `0${month}`;
-    }
-    if ( day >= 0 && day <= 9 ){
-      dia = `0${day}`;
-    }
-    item.ID = `${year}${mes}${dia}`;
+    item.ID =  this.getID( rutero.checkIn );
     rutero.ID = item.ID;
     const fecha = rutero.checkIn;
     item.checkIn = new Date(fecha.getTime() - (fecha.getTimezoneOffset() * 60000));
@@ -377,6 +384,70 @@ export class EliaService {
         }
       )
     }
+  }
+
+  private postVisitas( visitaDiaria: Visita ){
+    const URL = this.getIMAURL( environment.visitaDiaria, '' );
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      }
+    };
+    return this.http.post( URL, JSON.stringify(visitaDiaria), options );
+  }
+
+  private putVisitas( visitaDiaria: Visita ){
+    const URL = this.getIMAURL( environment.visitaDiaria, '' );
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      }
+    };
+    return this.http.put( URL, JSON.stringify(visitaDiaria), options );
+  }
+
+  syncVisitas( varConfig: Ruta ){
+    let visita: Visita = {
+      ID:             this.getID( varConfig.horaSincroniza ),
+      ruta:           varConfig.ruta,
+      horaSincroniza: varConfig.horaSincroniza,
+      horaAlmuerzo:   null,
+      latitud1:       varConfig.latitud1,
+      longitud1:      varConfig.longitud1,
+      idMercarista:   varConfig.idMercarista,
+      latitud2:       null,
+      longitud2:      null,
+    }
+    this.postVisitas ( visita ).subscribe(
+      resp => {
+        console.log('Info de Sincronización enviada...', resp);
+      }, error => {
+        console.log('Error de Envío de Sincronización', error.message);
+      }
+    )
+  }
+  
+  updateVisitas( varConfig: Ruta ){
+    let visita: Visita = {
+      ID:             this.getID( varConfig.horaSincroniza ),
+      ruta:           varConfig.ruta,
+      horaSincroniza: varConfig.horaSincroniza,
+      horaAlmuerzo:   varConfig.horaAlmuerzo,
+      latitud1:       varConfig.latitud1,
+      longitud1:      varConfig.longitud1,
+      idMercarista:   varConfig.idMercarista,
+      latitud2:       varConfig.latitud2,
+      longitud2:      varConfig.longitud2,
+    }
+    this.putVisitas ( visita ).subscribe(
+      resp => {
+        console.log('Info de Ruta Actualizada...', resp);
+      }, error => {
+        console.log('Error de Envío de datos de Ruta', error.message);
+      }
+    )
   }
 
 }

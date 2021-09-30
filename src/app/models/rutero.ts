@@ -8,6 +8,7 @@ export class VisitaDiaria {
     checkIn: Date;
     checkBodega: Date;
     checkOut: Date;
+    checkAlmuerzo: Date;
     latitud: number;
     longitud: number;
     transmitido: boolean;
@@ -24,6 +25,7 @@ export class VisitaDiaria {
         this.checkIn = null;
         this.checkBodega = null;
         this.checkOut = null;
+        this.checkAlmuerzo = null;
         this.latitud = latitud;
         this.longitud = longitud;
         this.transmitido = false;
