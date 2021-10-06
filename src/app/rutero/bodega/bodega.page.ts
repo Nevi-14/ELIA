@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { AlertController, ModalController, PopoverController } from '@ionic/angular';
+import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
+import { AlertController, ModalController, Platform, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
+import { Articulos } from 'src/app/models/productos';
 import { DetalleVisita } from 'src/app/models/rutero';
 import { EliaService } from 'src/app/services/elia.service';
 import { TareasService } from 'src/app/services/tareas.service';
@@ -21,6 +23,7 @@ export class BodegaPage implements OnInit {
   justificar: boolean = false;       // true = si ya se terminó de modificar estados y es hora de justificar faltantes
   pendientes: number = 0;           // El número de faltantes que están pendientes de justificar
   detalleRut: DetalleVisita[] = [];
+  articulos:  Articulos[] = [];
   etiqueta:   string = 'Bodega - Con Stock';
   linea:      number = 0;
   lineas:     number = 0;
@@ -29,10 +32,13 @@ export class BodegaPage implements OnInit {
                private modalCtrl: ModalController,
                private tareas: TareasService,
                private bd: EliaService,
+               private plt: Platform,
+               private barcodeScanner: BarcodeScanner,
                private popoverCtrl: PopoverController ) {}
 
   ngOnInit() {
     this.nombrePDV = this.pdv.nombre;
+    this.cargarArticulos();
     this.detalleRut = this.tareas.rutero[this.i].detalle.filter( d => d.existencias > 0 );
     if ( this.detalleRut.length === 0 ){
       this.justificar = true;
@@ -41,6 +47,11 @@ export class BodegaPage implements OnInit {
     }
     this.lineas = this.detalleRut.length;
     console.log('Faltantes con Stock: ', this.detalleRut);
+  }
+
+  async cargarArticulos(){
+    this.articulos = await this.bd.cargarArticulos();
+    console.log( this.articulos );
   }
 
 
@@ -69,16 +80,46 @@ export class BodegaPage implements OnInit {
   }
 
   cambioStock( i: number ){
-    if ( this.detalleRut[i].stock === 0 ){
-      this.detalleRut[i].stock = 1;
-      this.detalleRut[i].imagen = environment.bajoStock;
-    } else if (this.detalleRut[i].stock === 1){
-      this.detalleRut[i].stock = -1;
-      this.detalleRut[i].imagen = environment.faltante;
+    if ( this.plt.is('capacitor')) {
+      this.barcodeScanner.scan().then(barcodeData => {
+        console.log('Barcode data', barcodeData);
+        if ( !barcodeData.cancelled ){
+          const barras = barcodeData.text;
+          const a = this.articulos.findIndex( d => d.codigO_BARRAS_VENT === barras );
+          if ( a >= 0 && this.articulos[a].articulo === this.detalleRut[i].idProducto){
+
+            if ( this.detalleRut[i].stock === 0 ){
+              this.detalleRut[i].stock = 1;
+              this.detalleRut[i].imagen = environment.bajoStock;
+            } else if (this.detalleRut[i].stock === 1){
+              this.detalleRut[i].stock = -1;
+              this.detalleRut[i].imagen = environment.faltante;
+            } else {
+              this.detalleRut[i].stock = 0;
+              this.detalleRut[i].imagen = environment.okStock;
+              this.linea += 1;
+            }
+            
+          } else {
+            this.tareas.presentAlertW('Scan', 'Producto no existe en lista: ' + barras);
+          }
+        }
+       }).catch(err => {
+           console.log('Error', err);
+           this.tareas.presentAlertW('Scan', 'Error al abrir el Scaner');
+      });
     } else {
-      this.detalleRut[i].stock = 0;
-      this.detalleRut[i].imagen = environment.okStock;
-      this.linea += 1;
+      if ( this.detalleRut[i].stock === 0 ){
+        this.detalleRut[i].stock = 1;
+        this.detalleRut[i].imagen = environment.bajoStock;
+      } else if (this.detalleRut[i].stock === 1){
+        this.detalleRut[i].stock = -1;
+        this.detalleRut[i].imagen = environment.faltante;
+      } else {
+        this.detalleRut[i].stock = 0;
+        this.detalleRut[i].imagen = environment.okStock;
+        this.linea += 1;
+      }
     }
   }
 
@@ -132,7 +173,8 @@ export class BodegaPage implements OnInit {
   }
 
   checkOut(){
-    this.tareas.rutero[this.i].detalle = this.detalleRut.slice(0);
+    const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
+    this.tareas.rutero[this.i].detalle = temp.slice(0);
     const existe = this.tareas.rutero[this.i].detalle.findIndex( d => d.stock === -1 && d.justificacion === null );
 
     if ( existe < 0) {

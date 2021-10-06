@@ -397,22 +397,11 @@ export class EliaService {
     return this.http.post( URL, JSON.stringify(visitaDiaria), options );
   }
 
-  private putVisitas( visitaDiaria: Visita ){
-    const URL = this.getIMAURL( environment.visitaDiaria, '' );
-    const options = {
-      headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-      }
-    };
-    return this.http.put( URL, JSON.stringify(visitaDiaria), options );
-  }
-
   syncVisitas( varConfig: Ruta ){
     let visita: Visita = {
       ID:             this.getID( varConfig.horaSincroniza ),
       ruta:           varConfig.ruta,
-      horaSincroniza: varConfig.horaSincroniza,
+      horaSincroniza: new Date(new Date(varConfig.horaSincroniza).getTime() - (new Date(varConfig.horaSincroniza).getTimezoneOffset() * 60000)),
       horaAlmuerzo:   null,
       latitud1:       varConfig.latitud1,
       longitud1:      varConfig.longitud1,
@@ -428,13 +417,24 @@ export class EliaService {
       }
     )
   }
+
+  private putVisitas( visitaDiaria: Visita ){
+    const URL = this.getIMAURL( environment.visitaDiaria, `?id=${visitaDiaria.ID}&ruta=${visitaDiaria.ruta}` );
+    const options = {
+      headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+      }
+    };
+    return this.http.put( URL, JSON.stringify(visitaDiaria), options );
+  }
   
   updateVisitas( varConfig: Ruta ){
     let visita: Visita = {
       ID:             this.getID( varConfig.horaSincroniza ),
       ruta:           varConfig.ruta,
-      horaSincroniza: varConfig.horaSincroniza,
-      horaAlmuerzo:   varConfig.horaAlmuerzo,
+      horaSincroniza: new Date(new Date(varConfig.horaSincroniza).getTime() - (new Date(varConfig.horaSincroniza).getTimezoneOffset() * 60000)),
+      horaAlmuerzo:   new Date(new Date(varConfig.horaAlmuerzo).getTime() - (new Date(varConfig.horaAlmuerzo).getTimezoneOffset() * 60000)),
       latitud1:       varConfig.latitud1,
       longitud1:      varConfig.longitud1,
       idMercarista:   varConfig.idMercarista,

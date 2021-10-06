@@ -72,7 +72,7 @@ export class AdminPage implements OnInit {
       this.tareas.varConfig.longitud1 = resp.coords.longitude;
       if ( this.tareas.varConfig.ruta !== 'ME00'){
         const fecha = new Date();
-        this.tareas.varConfig.horaSincroniza = new Date(new Date(fecha).getTime() - (new Date(fecha).getTimezoneOffset() * 60000));
+        this.tareas.varConfig.horaSincroniza = new Date();
         this.tareas.guardarVarConfig();
         this.elia.syncVisitas( this.tareas.varConfig );
         this.elia.syncClientes( this.tareas.varConfig.ruta, true );

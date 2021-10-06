@@ -123,7 +123,7 @@ export class FaltantesPage implements OnInit {
        }).catch(err => {
            console.log('Error', err);
            this.tareas.presentAlertW('Scan', 'Error al abrir el Scaner');
-       });
+      });
     }
   }
 
