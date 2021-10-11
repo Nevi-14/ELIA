@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { AlertController, ModalController, Platform, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
-import { Articulos } from 'src/app/models/productos';
+import { Articulos, Productos } from 'src/app/models/productos';
 import { DetalleVisita } from 'src/app/models/rutero';
 import { EliaService } from 'src/app/services/elia.service';
 import { TareasService } from 'src/app/services/tareas.service';
@@ -24,6 +24,7 @@ export class BodegaPage implements OnInit {
   pendientes: number = 0;           // El número de faltantes que están pendientes de justificar
   detalleRut: DetalleVisita[] = [];
   articulos:  Articulos[] = [];
+  productos: Productos[] = [];
   etiqueta:   string = 'Bodega - Con Stock';
   linea:      number = 0;
   lineas:     number = 0;
@@ -39,6 +40,7 @@ export class BodegaPage implements OnInit {
   ngOnInit() {
     this.nombrePDV = this.pdv.nombre;
     this.cargarArticulos();
+    this.cargarProductos(this.pdv.idWM);
     this.detalleRut = this.tareas.rutero[this.i].detalle.filter( d => d.existencias > 0 );
     if ( this.detalleRut.length === 0 ){
       this.justificar = true;
@@ -54,6 +56,16 @@ export class BodegaPage implements OnInit {
     console.log( this.articulos );
   }
 
+  async cargarProductos( idCliente: string ){
+    let prod: Productos[] = [];
+
+    prod = await this.bd.cargarProductos();
+    this.productos = prod.filter( d => d.idCliente === idCliente );
+    console.log( 'Productos:', this.productos );
+    if (this.productos.length > 0){
+      this.lineas = this.productos.length;
+    }
+  }
 
   async presentAlertSalir() {
     const alert = await this.alertCtrl.create({
@@ -79,47 +91,79 @@ export class BodegaPage implements OnInit {
     await alert.present();
   }
 
-  cambioStock( i: number ){
-    if ( this.plt.is('capacitor')) {
+  async cambioStock( i: number ){
+    if ( this.plt.is('capacitor')) {                      // Si se ejecuta desde el celular abre el scaner, sino un alert input
       this.barcodeScanner.scan().then(barcodeData => {
         console.log('Barcode data', barcodeData);
         if ( !barcodeData.cancelled ){
-          const barras = barcodeData.text;
-          const a = this.articulos.findIndex( d => d.codigO_BARRAS_VENT === barras );
-          if ( a >= 0 && this.articulos[a].articulo === this.detalleRut[i].idProducto){
-
-            if ( this.detalleRut[i].stock === 0 ){
-              this.detalleRut[i].stock = 1;
-              this.detalleRut[i].imagen = environment.bajoStock;
-            } else if (this.detalleRut[i].stock === 1){
-              this.detalleRut[i].stock = -1;
-              this.detalleRut[i].imagen = environment.faltante;
-            } else {
-              this.detalleRut[i].stock = 0;
-              this.detalleRut[i].imagen = environment.okStock;
-              this.linea += 1;
-            }
-            
-          } else {
-            this.tareas.presentAlertW('Scan', 'Producto no existe en lista: ' + barras);
-          }
+          this.procesaCambio( barcodeData.text )
         }
        }).catch(err => {
            console.log('Error', err);
            this.tareas.presentAlertW('Scan', 'Error al abrir el Scaner');
       });
-    } else {
-      if ( this.detalleRut[i].stock === 0 ){
-        this.detalleRut[i].stock = 1;
-        this.detalleRut[i].imagen = environment.bajoStock;
-      } else if (this.detalleRut[i].stock === 1){
-        this.detalleRut[i].stock = -1;
-        this.detalleRut[i].imagen = environment.faltante;
-      } else {
-        this.detalleRut[i].stock = 0;
-        this.detalleRut[i].imagen = environment.okStock;
-        this.linea += 1;
+    } else {                                           // Al ejecutarse desde un emulador abre el alert input para leer el código de barras
+      const alert = await this.alertCtrl.create({
+        cssClass: 'my-custom-class',
+        header: 'Digite el código:',
+        inputs: [
+          {
+            name: 'barras',
+            type: 'number',
+          },
+        ],
+        buttons: [
+          {
+            text: 'Cancel',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: () => {
+              console.log('Confirm Cancel');
+            }
+          }, {
+            text: 'Ok',
+            handler: (data) => {
+              console.log(data.barras);
+              this.procesaCambio( data.barras );
+            }
+          }
+        ]
+      });
+      await alert.present();
+    }
+  }
+
+  procesaCambio( codigo: string ){ //debugger
+    const a = this.articulos.findIndex( d => d.codigO_BARRAS_VENT === codigo );
+    if ( a >= 0 ){
+      const b = this.productos.findIndex( e => e.idIslena === this.articulos[a].articulo );
+      if ( b >= 0 ){
+        const c = this.detalleRut.findIndex( g => g.idProducto === this.productos[b].id );
+        if ( c >= 0 ){
+          if ( this.detalleRut[c].stock !== 0 ){
+            this.linea += 1;
+          }
+          this.detalleRut[c].stock = 0;
+          this.detalleRut[c].imagen = environment.okStock;
+          this.tareas.presentAlertW('Scan', 'Ok... ');
+        } else {
+          this.tareas.presentAlertW('Scan', 'Producto no existe en la lista de pendientes: ' + codigo);
+        }
+      } else {   // El artículo no está en la lista de productos de la tienda.  Puede ser que se ingresara directo del catalogo de Isleña.  Entonces se busca por codigo de barras
+        const d = this.detalleRut.findIndex( g => g.codBarras === codigo );
+        if ( d >= 0 ){
+          if ( this.detalleRut[d].stock !== 0 ){
+            this.linea += 1;
+          }
+          this.detalleRut[d].stock = 0;
+          this.detalleRut[d].imagen = environment.okStock;
+          this.tareas.presentAlertW('Scan', 'Ok... ');
+        } else {
+          this.tareas.presentAlertW('Scan', 'Producto no existe en la lista de la tienda: ' + codigo);
+        }
       }
+    } else {
+      this.tareas.presentAlertW('Scan', 'Producto no existe en la lista de Isleña: ' + codigo);
     }
   }
 

@@ -18,6 +18,9 @@
     <ion-text color="primary">
       <h2>{{ nombrePDV }}</h2>
     </ion-text>
+    <ion-button (click)="cambioStock(0)" slot="end" size="medium" color="light">
+      <ion-icon slot="icon-only" name="barcode-outline"></ion-icon>
+    </ion-button>
   </ion-item>
 
   <ion-list>
@@ -26,7 +29,7 @@
       <ion-label (click)="transito( $event, j )" class="ion-text-wrap" [color]="item.justificacion !== null || item.cant_Vence !== null ? 'dark' : 'danger'">
         {{ item.idProducto }} - {{ item.nombre }}
       </ion-label>
-      <ion-thumbnail slot="end" (click)="cambioStock(j)">
+      <ion-thumbnail slot="end">
         <img [src]="item.imagen">
       </ion-thumbnail>
     </ion-item>
@@ -50,6 +53,9 @@
 
 <ion-footer>
   <ion-toolbar color="primary">
+    <ion-button (click)="cambioStock(0)" slot="start" size="medium" color="light">
+      <ion-icon slot="icon-only" name="barcode-outline"></ion-icon>
+    </ion-button>
     <ion-title slot="end">Líneas {{linea}} de {{lineas}}</ion-title>
   </ion-toolbar>
 </ion-footer>

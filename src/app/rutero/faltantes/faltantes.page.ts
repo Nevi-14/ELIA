@@ -103,14 +103,19 @@ export class FaltantesPage implements OnInit {
         console.log('Barcode data', barcodeData);
         if ( !barcodeData.cancelled ){
           barras = barcodeData.text;
-          const i = this.articulos.findIndex( d => d.codigO_BARRAS_VENT === barras );
+          const i = this.articulos.findIndex( d => d.codigO_BARRAS_VENT === barras );     // i > 0 significa que el artículo está en la lista de Isleña
           if ( i >= 0 ){
             const j = this.productos.findIndex( d => d.idIslena === this.articulos[i].articulo );
-            if ( j >= 0 ){
+            if ( j >= 0 ){                                                               // j > 0 significa que el artículo está en el catálogo de la tienda
               this.busquedaProd.push( this.productos[j] );
+              this.texto = ''; 
             } else {
-              this.tareas.presentAlertW('Scan', 'Producto no existe en lista de la tienda: ' + barras);
-              this.texto = '';
+              // Se incluirá el artçiculo en la lista de la tienda
+              const prod = new Productos( this.articulos[i].articulo, this.pdv.id, this.articulos[i].articulo, this.articulos[i].descripcion, 0, this.articulos[i].codigO_BARRAS_VENT,
+                              this.articulos[i].codigO_BARRAS_VENT, 0);
+              this.busquedaProd.push( prod );
+              this.tareas.presentAlertW('Scan', 'Producto no existe en lista de la tienda. Será incluido... ' + barras);
+              this.texto = '';  
             }
           } else {
             this.tareas.presentAlertW('Scan', 'Producto no existe en lista de Isleña: ' + barras);
