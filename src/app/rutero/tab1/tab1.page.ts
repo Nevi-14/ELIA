@@ -53,6 +53,7 @@ export class Tab1Page {
           this.geolocation.getCurrentPosition().then((resp) => {
             this.tareas.rutero[i].latitud = resp.coords.latitude;
             this.tareas.rutero[i].longitud = resp.coords.longitude;
+            this.tareas.presentAlertW('Geo Location', resp.coords.latitude + ' ' + resp.coords.longitude);
             this.abrirFaltantes( i );
            }).catch((error) => {
              console.log('Error getting location', error);
