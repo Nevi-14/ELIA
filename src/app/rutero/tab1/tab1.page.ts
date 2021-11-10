@@ -49,7 +49,7 @@ export class Tab1Page {
       if ( data.check ){
         this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
         if (this.tareas.rutero[i].checkIn == null || this.tareas.rutero[i].checkBodega == null){
-          this.presentaLoading( 'Check In...');
+          //this.presentaLoading( 'Check In...');
           this.geolocation.getCurrentPosition().then((resp) => {
             this.tareas.rutero[i].latitud = resp.coords.latitude;
             this.tareas.rutero[i].longitud = resp.coords.longitude;

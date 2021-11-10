@@ -304,8 +304,10 @@ export class EliaService {
     this.putRutero( item ).subscribe(
       resp => {
         console.log('Rutero Insertado...', resp);
+        this.tareas.presentaToast('Información Actualizada...');
       }, error => {
         console.log('Error Actualizando Cliente ', error.message);
+        this.tareas.presentaToast('Error de Envío...!!!');
       }
     )
   }
