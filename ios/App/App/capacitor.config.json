@@ -1,6 +1,6 @@
 {
-  "appId": "cr.di.elia",
-  "appName": "Elia",
+  "appId": "cr.di.eliaApp",
+  "appName": "EliaApp",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",

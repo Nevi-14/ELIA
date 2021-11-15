@@ -67,26 +67,27 @@ export class AdminPage implements OnInit {
   }
 
   sincronizar(){
-    this.geolocation.getCurrentPosition().then((resp) => {
-      this.tareas.varConfig.latitud1 = resp.coords.latitude;
-      this.tareas.varConfig.longitud1 = resp.coords.longitude;
-      if ( this.tareas.varConfig.ruta !== 'ME00'){
-        const fecha = new Date();
-        this.tareas.varConfig.horaSincroniza = new Date();
-        this.tareas.guardarVarConfig();
-        this.elia.syncVisitas( this.tareas.varConfig );
-        this.elia.syncClientes( this.tareas.varConfig.ruta, true );
-        this.elia.syncArticulos();
-        if (localStorage.getItem('ELIAvisitaDiaria')){
-          localStorage.removeItem('ELIAvisitaDiaria');
+    this.geolocation.getCurrentPosition({enableHighAccuracy: true, timeout: 5000, maximumAge: 0}).then(
+      resp => {
+        this.tareas.varConfig.latitud1 = resp.coords.latitude;
+        this.tareas.varConfig.longitud1 = resp.coords.longitude;
+        if ( this.tareas.varConfig.ruta !== 'ME00'){
+          const fecha = new Date();
+          this.tareas.varConfig.horaSincroniza = new Date();
+          this.tareas.guardarVarConfig();
+          this.elia.syncVisitas( this.tareas.varConfig );
+          this.elia.syncClientes( this.tareas.varConfig.ruta, true );
+          this.elia.syncArticulos();
+          if (localStorage.getItem('ELIAvisitaDiaria')){
+            localStorage.removeItem('ELIAvisitaDiaria');
+          }
+        } else {
+          this.tareas.presentAlertW('Sincronización', 'La aplicación no tiene una ruta definda...');
         }
-      } else {
-        this.tareas.presentAlertW('Sincronización', 'La aplicación no tiene una ruta definda...');
-      }
-    }).catch((error) => {
+      }).catch((error) => {
        console.log('Error getting location', error);
        this.tareas.presentAlertW('Sincronización', 'Error de GPS...!!!')
-    });
+      });
   }
 
   salir(){
