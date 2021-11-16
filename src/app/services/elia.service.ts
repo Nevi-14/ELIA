@@ -403,7 +403,7 @@ export class EliaService {
     let visita: Visita = {
       ID:             this.getID( varConfig.horaSincroniza ),
       ruta:           varConfig.ruta,
-      horaSincroniza: new Date(new Date(varConfig.horaSincroniza).getTime() - (new Date(varConfig.horaSincroniza).getTimezoneOffset() * 60000)),
+      horaSincroniza: new Date(), // new Date(varConfig.horaSincroniza).getTime() - (new Date(varConfig.horaSincroniza).getTimezoneOffset() * 60000)
       horaAlmuerzo:   null,
       latitud1:       varConfig.latitud1,
       longitud1:      varConfig.longitud1,

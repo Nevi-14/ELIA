@@ -49,7 +49,7 @@ export class Tab1Page {
       if ( data.check ){
         this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
         if (this.tareas.rutero[i].checkIn == null || this.tareas.rutero[i].checkBodega == null){
-          //this.presentaLoading( 'Check In...');
+          /*
           this.geolocation.getCurrentPosition({enableHighAccuracy: true, timeout: 5000, maximumAge: 0}).then(
             resp => {
             this.tareas.rutero[i].latitud = resp.coords.latitude;
@@ -60,8 +60,11 @@ export class Tab1Page {
              console.log('Error getting location', error);
              this.tareas.presentAlertW('Geolocalización', 'Error abriendo el GPS...!!!');
              this.abrirFaltantes( i );
-           });
-           //this.abrirFaltantes( i );
+           });*/
+           this.tareas.presentAlertW('Geo Location', data.latitud + ' ' + data.longitud);
+           this.tareas.rutero[i].latitud = data.latitud;
+           this.tareas.rutero[i].longitud = data.longitud;
+           this.abrirFaltantes( i );
         } else {
           this.abrirBodega( i );
         }
