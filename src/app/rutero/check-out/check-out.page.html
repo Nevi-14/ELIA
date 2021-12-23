@@ -23,7 +23,7 @@
         </ion-row>
         <ion-row>
           <ion-col>
-            <ion-button color="primary" type="submit" shape="round" (click)="checkIn()">Check In</ion-button>
+            <ion-button color="primary" type="submit" shape="round" (click)="checkOut()">Check Out</ion-button>
           </ion-col>
         </ion-row>
       </ion-grid>
@@ -31,11 +31,3 @@
     </ion-slide>
   </ion-slides>
 </ion-content>
-<ion-footer class="ion-no-border">
-  <ion-toolbar>
-    <ion-item>
-      <ion-label class="ion-text-right">Sin Marcas</ion-label>
-      <ion-toggle [(ngModel)]="sinMarcas"></ion-toggle>
-    </ion-item>
-  </ion-toolbar>
-</ion-footer>

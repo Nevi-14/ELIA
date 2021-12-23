@@ -45,7 +45,10 @@
       </ion-item-options>
   
       <ion-item>
-        <ion-label class="ion-text-wrap">
+        <ion-label class="ion-text-wrap" *ngIf="item.cant_Vence === null">
+          {{ item.idProducto }} - {{ item.nombre }}
+        </ion-label>
+        <ion-label class="ion-text-wrap" color="primary" *ngIf="item.cant_Vence !== null">
           {{ item.idProducto }} - {{ item.nombre }}
         </ion-label>
         <ion-thumbnail slot="end" (click)="cambioStock(j)">

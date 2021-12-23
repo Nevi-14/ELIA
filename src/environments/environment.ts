@@ -22,7 +22,7 @@ export const environment = {
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
   version: "1.0.0",
-  prdMode: true,
+  prdMode: false,
 };
 
 /*

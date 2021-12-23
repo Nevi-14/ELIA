@@ -8,6 +8,7 @@ import { ResumenPage } from '../resumen/resumen.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { EliaService } from 'src/app/services/elia.service';
 import { AlmuerzoPage } from '../almuerzo/almuerzo.page';
+import { CheckOutPage } from '../check-out/check-out.page';
 
 @Component({
   selector: 'app-tab1',
@@ -36,41 +37,40 @@ export class Tab1Page {
 
   async checkIn( i: number ){
     console.log(i);
-    if (!this.tareas.rutero[i].visitado){ 
-      const modal = await this.modalCtrl.create({
-        component: CheckinPage,
-        componentProps: {
-          'pdv': this.tareas.rutero[i]
-        },
-        cssClass: 'my-custom-class'
-      });
-      await modal.present();
-      const {data} = await modal.onDidDismiss();
-      if ( data.check ){
-        this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
-        if (this.tareas.rutero[i].checkIn == null || this.tareas.rutero[i].checkBodega == null){
-          /*
-          this.geolocation.getCurrentPosition({enableHighAccuracy: true, timeout: 5000, maximumAge: 0}).then(
-            resp => {
-            this.tareas.rutero[i].latitud = resp.coords.latitude;
-            this.tareas.rutero[i].longitud = resp.coords.longitude;
-            this.tareas.presentAlertW('Geo Location', resp.coords.latitude + ' ' + resp.coords.longitude);
-            this.abrirFaltantes( i );
-           }).catch((error) => {
-             console.log('Error getting location', error);
-             this.tareas.presentAlertW('Geolocalización', 'Error abriendo el GPS...!!!');
-             this.abrirFaltantes( i );
-           });*/
-           this.tareas.presentAlertW('Geo Location', data.latitud + ' ' + data.longitud);
-           this.tareas.rutero[i].latitud = data.latitud;
-           this.tareas.rutero[i].longitud = data.longitud;
-           this.abrirFaltantes( i );
-        } else {
-          this.abrirBodega( i );
+    this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
+    if (!this.tareas.rutero[i].visitado){            // Validamos si el cliente ya fue visita
+      if ( this.tareas.rutero[i].checkIn === null ){   // Validamos si NO se hizo check in en el cliente para invocar el check in
+        const modal = await this.modalCtrl.create({
+          component: CheckinPage,
+          componentProps: {
+            'pdv': this.tareas.rutero[i]
+          },
+          cssClass: 'my-custom-class'
+        });
+        await modal.present();
+        const {data} = await modal.onDidDismiss();
+        if ( data.check ){
+          this.tareas.presentAlertW('Geo Location', data.latitud + ' ' + data.longitud);
+          this.tareas.rutero[i].latitud = data.latitud;
+          this.tareas.rutero[i].longitud = data.longitud;
+          this.tareas.rutero[i].sinMarcas = data.sinMarcas;
+          if ( !data.sinMarcas ){
+            this.abrirFaltantes(i);
+          } else {
+            this.abrirCheckOut(i);
+          }
         }
+      } else if ( this.tareas.rutero[i].checkIn !== null && this.tareas.rutero[i].checkBodega === null ){
+        if ( !this.tareas.rutero[i].sinMarcas ){
+          this.abrirFaltantes(i);
+        } else {
+          this.abrirCheckOut(i);
+        }
+      } else if ( this.tareas.rutero[i].checkBodega !== null ){
+        this.abrirBodega(i);
       }
     } else {
-      this.abrirResumen( i );
+      this.abrirResumen(i);
     }
   }
 
@@ -141,11 +141,38 @@ export class Tab1Page {
     }
   }
 
+  async abrirCheckOut( i: number ){
+    if ( this.tareas.rutero[i].checkIn === null ){ 
+      this.tareas.rutero[i].checkIn = new Date();
+      this.bd.insertRutero( this.tareas.rutero[i] );
+      this.tareas.guardarVisitas();
+    }
+    const modal4 = await this.modalCtrl.create({
+      component: CheckOutPage,
+      componentProps: {
+        'pdv': this.tareas.pdvActivo,
+        'i': i,
+      },
+      cssClass: 'my-custom-class'
+    });
+    await modal4.present();
+    const {data} = await modal4.onDidDismiss();
+    if ( data.check ){
+      this.tareas.rutero[i].checkOut = new Date();
+      this.tareas.rutero[i].visitado = true;
+      this.tareas.rutero[i].observaciones = 'SIN MARCAS...!!!';
+      this.tareas.guardarVisitas();
+      this.bd.updateRutero( this.tareas.rutero[i] );
+    }
+  }
+
   async abrirBodega( i: number ){
-    const temp = this.tareas.rutero[i].detalle.filter( d => d.stock !== 0 || d.vencimiento !== null );
-    this.tareas.rutero[i].detalle = temp.slice(0);
-    this.tareas.rutero[i].checkBodega = new Date();
-    this.tareas.guardarVisitas();
+    //const temp = this.tareas.rutero[i].detalle.filter( d => d.stock !== 0 || d.vencimiento !== null );
+    //this.tareas.rutero[i].detalle = temp.slice(0);
+    if (this.tareas.rutero[i].checkBodega === null){
+      this.tareas.rutero[i].checkBodega = new Date();
+      this.tareas.guardarVisitas();
+    }
     const modal3 = await this.modalCtrl.create({
       component: BodegaPage,
       componentProps: {

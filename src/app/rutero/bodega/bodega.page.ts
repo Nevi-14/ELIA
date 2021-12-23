@@ -167,6 +167,20 @@ export class BodegaPage implements OnInit {
     }
   }
 
+  cambioManual( i: number ){
+    if ( !this.plt.is('capacitor') ){
+      if ( this.detalleRut[i].stock === -1 ){
+        this.detalleRut[i].stock = 0;
+        this.detalleRut[i].imagen = environment.okStock;
+        this.detalleRut[i].justificacion = null;
+      } else if ( this.detalleRut[i].stock === 1 ){
+        this.detalleRut[i].stock = 0;
+        this.detalleRut[i].imagen = environment.okStock;
+        this.detalleRut[i].justificacion = null;
+      }
+    }
+  }
+
   async transito(ev: any, j: number ){
     console.log(this.detalleRut[j]);
     const popover = await this.popoverCtrl.create({
@@ -206,8 +220,8 @@ export class BodegaPage implements OnInit {
         j = this.tareas.rutero[this.i].detalle.findIndex( e => e.idProducto === d.idProducto );
         this.tareas.rutero[this.i].detalle[j] = d;
       });
-      const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
-      this.tareas.rutero[this.i].detalle = temp.slice(0);
+      //const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
+      //this.tareas.rutero[this.i].detalle = temp.slice(0);
       this.tareas.guardarVisitas();
       this.detalleRut = this.tareas.rutero[this.i].detalle.slice(0);
       this.etiqueta = 'Bodega Final';
@@ -217,8 +231,8 @@ export class BodegaPage implements OnInit {
   }
 
   checkOut(){
-    const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
-    this.tareas.rutero[this.i].detalle = temp.slice(0);
+    //const temp = this.tareas.rutero[this.i].detalle.filter( d => d.stock !== 0 );
+    //this.tareas.rutero[this.i].detalle = temp.slice(0);
     const existe = this.tareas.rutero[this.i].detalle.findIndex( d => d.stock === -1 && d.justificacion === null );
 
     if ( existe < 0) {

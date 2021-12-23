@@ -33,7 +33,7 @@ export interface ProductosBD {
     nombre:        string;
     precio:        number;
     codigoBarras:  string;
-    barrasCliente: string;
+    //barrasCliente: string;
     stockMinimo:   number;
     idProduc:      string;
 }

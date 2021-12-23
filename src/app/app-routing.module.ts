@@ -45,6 +45,10 @@ const routes: Routes = [
   {
     path: 'almuerzo',
     loadChildren: () => import('./rutero/almuerzo/almuerzo.module').then( m => m.AlmuerzoPageModule)
+  },
+  {
+    path: 'check-out',
+    loadChildren: () => import('./rutero/check-out/check-out.module').then( m => m.CheckOutPageModule)
   }
 ];
 @NgModule({

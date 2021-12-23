@@ -77,7 +77,7 @@ export class EliaService {
     let test: string = '';
 
     if ( !environment .prdMode ) {
-      test = environment.TestURL;
+      //test = environment.TestURL;
     }
     const URL = environment.preURL + test + environment.postURL + api + id;
     console.log(URL);
@@ -219,7 +219,7 @@ export class EliaService {
       resp => {
         console.log(`ProductosBD (${idCliente})`, resp );
         resp.forEach(e => {
-          item = new Productos( e.id.toString(), e.idCliente, e.idProduc, e.nombre, e.precio, e.codigoBarras, e.barrasCliente, e.stockMinimo);
+          item = new Productos( e.id.toString(), e.idCliente, e.idProduc, e.nombre, e.precio, e.codigoBarras, e.codigoBarras, e.stockMinimo);
           productos.push( item );
         });
         this.guardarSKUS( productos );
@@ -375,7 +375,7 @@ export class EliaService {
 
     if (detalle.length > 0){
       detalle.forEach( d => {
-        item = new RuteroDetBD( ID, idCliente, d.idProducto, d.nombre, d.stock, d.justificacion );
+        item = new RuteroDetBD( ID, idCliente, d.idProducto, d.nombre, d.stock, d.justificacion, d.vencimiento, d.cant_Vence );
         array.push( item );
       });
       this.postRuteroDetalle( array ).subscribe(

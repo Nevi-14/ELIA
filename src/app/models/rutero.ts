@@ -16,6 +16,7 @@ export class VisitaDiaria {
     idMercaderista: string;
     observaciones: string;
     orden: number;
+    sinMarcas: boolean;
     detalle: DetalleVisita[] = [];
 
     constructor ( id: string, nombre: string, horaVisita: string, latitud: number, longitud: number, idMercaderista: string, orden: number ){
@@ -34,6 +35,7 @@ export class VisitaDiaria {
         this.observaciones = null;
         this.orden = orden;
         this.ID = '';
+        this.sinMarcas = false;
     }
 }
 
@@ -74,5 +76,7 @@ export class RuteroDetBD {
         public nombre:     string,
         public stock:      number,
         public justificacion: string,
+        public vencimiento:   Date,
+        public cant_Vencen:   number,
     ){}
 }

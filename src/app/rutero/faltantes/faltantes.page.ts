@@ -63,7 +63,7 @@ export class FaltantesPage implements OnInit {
     console.log( this.articulos );
   }
 
-  buscarProducto(){
+  buscarProducto(){ 
     if (this.texto.length > 0){
       if (isNaN(+this.texto)) {            // Se buscará por nombre de producto
         // Se recorre el arreglo para buscar coincidencias y se llena el arreglo busquedaProd[]
@@ -121,7 +121,10 @@ export class FaltantesPage implements OnInit {
             this.tareas.presentAlertW('Scan', 'Producto no existe en lista de Isleña: ' + barras);
             this.texto = '';
           }
+          
           if ( this.busquedaProd.length > 0 ){
+            this.busquedaProd[0].codigoBarras = barras;
+            this.busquedaProd[0].barrasCliente = barras;
             this.productoSelect(0);
           }
         }
@@ -132,7 +135,7 @@ export class FaltantesPage implements OnInit {
     }
   }
 
-  listaProducClick( i: number ){
+  listaProducClick( i: number ){ 
     if (environment.prdMode){
       this.mostrarListaProd = false;             // Y se activa el flag de mostrar producto
       this.busquedaProd = [];
@@ -184,12 +187,15 @@ export class FaltantesPage implements OnInit {
     if ( this.tareas.rutero[this.i].detalle[i].stock === 0 ){
       this.tareas.rutero[this.i].detalle[i].stock = 1;
       this.tareas.rutero[this.i].detalle[i].imagen = environment.bajoStock;
+      this.tareas.rutero[this.i].detalle[i].justificacion = null;
     } else if (this.tareas.rutero[this.i].detalle[i].stock === 1){
       this.tareas.rutero[this.i].detalle[i].stock = -1;
       this.tareas.rutero[this.i].detalle[i].imagen = environment.faltante;
+      this.tareas.rutero[this.i].detalle[i].justificacion = null;
     } else {
       this.tareas.rutero[this.i].detalle[i].stock = 0;
       this.tareas.rutero[this.i].detalle[i].imagen = environment.okStock;
+      this.tareas.rutero[this.i].detalle[i].justificacion = 'N/A';
     }
   }
 
