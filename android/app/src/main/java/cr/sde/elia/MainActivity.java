@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package cr.sde.elia;
 
 import android.os.Bundle;
 

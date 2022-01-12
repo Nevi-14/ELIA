@@ -13,7 +13,7 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 })
 export class AdminPage implements OnInit {
 
-  texto:string;
+  texto: string;
   ambiente: string = '';
   version: string = '';
 

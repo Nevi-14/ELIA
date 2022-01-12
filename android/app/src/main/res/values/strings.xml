@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Elia</string>
-    <string name="title_activity_main">Elia</string>
-    <string name="package_name">io.ionic.starter</string>
-    <string name="custom_url_scheme">io.ionic.starter</string>
+    <string name="app_name">IMApp</string>
+    <string name="title_activity_main">IMApp</string>
+    <string name="package_name">cr.sde.elia</string>
+    <string name="custom_url_scheme">cr.sde.elia</string>
 </resources>

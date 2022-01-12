@@ -1,6 +1,6 @@
 {
-  "appId": "cr.di.elia",
-  "appName": "Elia",
+  "appId": "cr.sde.elia",
+  "appName": "IMApp",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www",
