@@ -50,7 +50,7 @@ export class Tab1Page {
         await modal.present();
         const {data} = await modal.onDidDismiss();
         if ( data.check ){
-          this.tareas.presentAlertW('Geo Location', data.latitud + ' ' + data.longitud);
+          //this.tareas.presentAlertW('Geo Location', data.latitud + ' ' + data.longitud);
           this.tareas.rutero[i].latitud = data.latitud;
           this.tareas.rutero[i].longitud = data.longitud;
           this.tareas.rutero[i].sinMarcas = data.sinMarcas;

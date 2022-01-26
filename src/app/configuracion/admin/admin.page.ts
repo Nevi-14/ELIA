@@ -67,7 +67,7 @@ export class AdminPage implements OnInit {
   }
 
   sincronizar(){
-    this.geolocation.getCurrentPosition({enableHighAccuracy: true, timeout: 5000, maximumAge: 0}).then(
+    this.geolocation.getCurrentPosition(/*{enableHighAccuracy: true, timeout: 5000, maximumAge: 0}*/).then(
       resp => {
         this.tareas.varConfig.latitud1 = resp.coords.latitude;
         this.tareas.varConfig.longitud1 = resp.coords.longitude;

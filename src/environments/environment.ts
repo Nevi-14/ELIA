@@ -8,11 +8,12 @@ export const environment = {
   adminClave: '@dmin2021*',
   preURL: 'http://api_isa',
   TestURL: '_test',
-  postURL: '.soportecr.xyz/api/',
-  IMAURL: 'http://mercaderistas.soportecr.xyz/api/',
+  postURL: '.di-apps.co.cr/api/',
+  IMAURL: 'http://mercaderistas.di-apps.co.cr/api/',
   ArticulosURL: 'IMArticulos/',
   rutasURL: 'IMA_Rutas/',
-  clientesURL: 'IMA_Clientes/',
+  clientesISAURL: 'IMA_Clientes/',
+  clientesIMAURL: 'Clientes/',
   rolVisitaURL: 'IMA_Visitas/',
   visitaDiaria: 'Visita/',
   productosURL: 'IMA_Productos/',
@@ -22,7 +23,7 @@ export const environment = {
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
   version: "1.0.0",
-  prdMode: false,
+  prdMode: true,
 };
 
 /*

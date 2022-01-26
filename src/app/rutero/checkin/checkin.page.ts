@@ -17,14 +17,14 @@ export class CheckinPage {
                private geolocation: Geolocation ) { }
 
   checkIn(){
-    this.geolocation.getCurrentPosition({enableHighAccuracy: true, timeout: 8000, maximumAge: 0}).then(
+    this.geolocation.getCurrentPosition(/*{enableHighAccuracy: true, timeout: 8000, maximumAge: 0}*/).then(
       resp => {
       const latitud = resp.coords.latitude;
       const longitud = resp.coords.longitude;
       this.modalCtrl.dismiss({check: true, latitud, longitud, sinMarcas: this.sinMarcas});
      }).catch((error) => {
        console.log('Error getting location', error);
-       this.modalCtrl.dismiss({check: false, latitud: 0, longitud: 0});
+       this.modalCtrl.dismiss({check: true, latitud: 0, longitud: 0});
      });
   }
 

@@ -10,9 +10,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { IonicStorageModule } from '@ionic/storage-angular';
+import { FiltroPipe } from './pipes/filtro.pipe';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, FiltroPipe],
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, HttpClientModule, IonicStorageModule.forRoot()],
   providers: [Geolocation, BarcodeScanner, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],

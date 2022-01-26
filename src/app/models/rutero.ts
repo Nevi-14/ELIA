@@ -17,6 +17,7 @@ export class VisitaDiaria {
     observaciones: string;
     orden: number;
     sinMarcas: boolean;
+    agregado: boolean;
     detalle: DetalleVisita[] = [];
 
     constructor ( id: string, nombre: string, horaVisita: string, latitud: number, longitud: number, idMercaderista: string, orden: number ){
@@ -36,6 +37,7 @@ export class VisitaDiaria {
         this.orden = orden;
         this.ID = '';
         this.sinMarcas = false;
+        this.agregado = false;
     }
 }
 

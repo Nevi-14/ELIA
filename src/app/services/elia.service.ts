@@ -96,7 +96,12 @@ export class EliaService {
   }
 
   private getClientes( ruta: string ){
-    const URL = this.getISAURL( environment.clientesURL, ruta );
+    const URL = this.getISAURL( environment.clientesISAURL, ruta );
+    return this.http.get<ClientesBD[]>( URL );
+  }
+
+  getClientesIMA(){
+    const URL = this.getIMAURL( environment.clientesIMAURL, '' );
     return this.http.get<ClientesBD[]>( URL );
   }
 
@@ -262,10 +267,11 @@ export class EliaService {
           'Accept': 'application/json'
       }
     };
+    console.log(JSON.stringify(rutero));
     return this.http.post( URL, JSON.stringify(rutero), options );
   }
 
-  private getID( fecha: Date ){
+  getID( fecha: Date ){
     let day = new Date(fecha).getDate();
     let month = new Date(fecha).getMonth() + 1;
     let year = new Date(fecha).getFullYear();
@@ -301,15 +307,27 @@ export class EliaService {
     rutero.ID = item.ID;
     const fecha = rutero.checkIn;
     item.checkIn = new Date(fecha.getTime() - (fecha.getTimezoneOffset() * 60000));
-    this.putRutero( item ).subscribe(
-      resp => {
-        console.log('Rutero Insertado...', resp);
-        this.tareas.presentaToast('Información Actualizada...');
-      }, error => {
-        console.log('Error Actualizando Cliente ', error.message);
-        this.tareas.presentaToast('Error de Envío...!!!');
-      }
-    )
+    if ( !rutero.agregado ){              // Si es un cliente regular de la ruta, actualiza la info del rutero
+      this.putRutero( item ).subscribe(
+        resp => {
+          console.log('Rutero Modificado...', resp);
+          this.tareas.presentaToast('Información Actualizada...');
+        }, error => {
+          console.log('Error Actualizando Cliente ', error.message);
+          this.tareas.presentaToast('Error de Envío...!!!');
+        }
+      );
+    } else {                              // Es un cliente agregado en el día al rutero.  Se debe insertar
+      this.postRutero(item).subscribe(
+        resp => {
+          console.log('Rutero Insertado...', resp);
+          this.tareas.presentaToast('Información Actualizada...');
+        }, error => {
+          console.log('Error Insertando en el rutero el Cliente ', error.message);
+          this.tareas.presentaToast('Error de Envío...!!!');
+        }
+      );
+    }
   }
 
   private putRutero( rutero: RuteroBD ){
@@ -321,6 +339,7 @@ export class EliaService {
           'Access-Control-Allow-Origin': '*'
       }
     };
+    console.log(JSON.stringify(rutero));
     return this.http.put( URL, JSON.stringify(rutero), options );
   }
 
@@ -353,6 +372,7 @@ export class EliaService {
         this.insertDetalleRutero( rutero.detalle, rutero.ID, rutero.idPDV );
       }, error => {
         console.log('Error Actualizando Cliente ', error.message);
+        this.tareas.presentaToast('Error de Envío...!!!');
       }
     );
     console.log(JSON.stringify(item));
@@ -381,10 +401,12 @@ export class EliaService {
       this.postRuteroDetalle( array ).subscribe(
         resp => {
           console.log('Insertado rutero Detalle. ', resp);
+          this.tareas.presentaToast('Información Actualizada...');
         }, error => {
           console.log('Error Insertando Rutero Detalle. ', error.message);
+          this.tareas.presentaToast('Error de Envío...!!!');
         }
-      )
+      );
     }
   }
 

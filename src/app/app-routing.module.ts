@@ -49,6 +49,10 @@ const routes: Routes = [
   {
     path: 'check-out',
     loadChildren: () => import('./rutero/check-out/check-out.module').then( m => m.CheckOutPageModule)
+  },
+  {
+    path: 'clientes',
+    loadChildren: () => import('./configuracion/clientes/clientes.module').then( m => m.ClientesPageModule)
   }
 ];
 @NgModule({

@@ -5,6 +5,7 @@ import { TareasService } from 'src/app/services/tareas.service';
 import { AdminPage } from '../admin/admin.page';
 import { LoginPage } from '../login/login.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { ClientesPage } from '../clientes/clientes.page';
 
 @Component({
   selector: 'app-tab2',
@@ -92,7 +93,19 @@ export class Tab2Page {
        console.log('Error getting location', error);
        this.tareas.presentAlertW('Sincronización', 'Error de GPS...!!!')
     });
-    
+  }
+
+  async agregarPdv(){
+    const modal1 = await this.modalCtrl.create({
+      component: ClientesPage,
+      cssClass: 'my-custom-class'
+    });
+    await modal1.present();
+    const {data} = await modal1.onDidDismiss();
+    if ( data.check ){
+      this.tareas.presentAlertW('Clientes', 'Cliente agregado...');
+      this.tareas.guardarVisitas();
+    }
   }
 
 }
