@@ -331,7 +331,7 @@ export class EliaService {
   }
 
   private putRutero( rutero: RuteroBD ){
-    const URL = this.getIMAURL( environment.ruteroPostURL, `?ID=${rutero.ID}&idCliente=${rutero.idCliente}` );
+    const URL = this.getISAURL( environment.ruteroPostURL, `?ID=${rutero.ID}&idCliente=${rutero.idCliente}` );
     const options = {
       headers: {
           'Content-Type': 'application/json',
@@ -379,7 +379,7 @@ export class EliaService {
   }
 
   private postRuteroDetalle( detalle: RuteroDetBD[] ){
-    const URL = this.getIMAURL( environment.detalleRutURL, '' );
+    const URL = this.getISAURL( environment.detalleRutURL, '' );
     const options = {
       headers: {
           'Content-Type': 'application/json',

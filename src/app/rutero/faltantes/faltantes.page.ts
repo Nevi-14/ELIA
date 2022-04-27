@@ -309,7 +309,31 @@ export class FaltantesPage implements OnInit {
       ]
     });
     await alert.present();
-    
+  }
+
+  async sinMarcas(){
+    const alert = await this.alertCtl.create({
+      cssClass: 'my-custom-class',
+      header: 'Sin Marcas...!!!',
+      message: 'Desea cerrar el cliente sin Marcas?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: () => {
+            console.log('Confirm Cancel');
+          }
+        }, {
+          text: 'Si',
+          handler: () => {
+            this.tareas.rutero[this.i].sinMarcas = true;
+            this.tareas.guardarVisitas();
+          }
+        }
+      ]
+    });
+    await alert.present();
   }
 
 }

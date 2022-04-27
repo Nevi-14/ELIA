@@ -24,7 +24,7 @@ export class CheckinPage {
       this.modalCtrl.dismiss({check: true, latitud, longitud, sinMarcas: this.sinMarcas});
      }).catch((error) => {
        console.log('Error getting location', error);
-       this.modalCtrl.dismiss({check: true, latitud: 0, longitud: 0});
+       this.modalCtrl.dismiss({check: true, latitud: 0, longitud: 0, sinMarcas: this.sinMarcas});
      });
   }
 
