@@ -411,7 +411,7 @@ export class EliaService {
   }
 
   private postVisitas( visitaDiaria: Visita ){
-    const URL = this.getIMAURL( environment.visitaDiaria, '' );
+    const URL = this.getISAURL( environment.visitaDiaria, '' );
     const options = {
       headers: {
           'Content-Type': 'application/json',
@@ -443,7 +443,7 @@ export class EliaService {
   }
 
   private putVisitas( visitaDiaria: Visita ){
-    const URL = this.getIMAURL( environment.visitaDiaria, `?id=${visitaDiaria.ID}&ruta=${visitaDiaria.ruta}` );
+    const URL = this.getISAURL( environment.visitaDiaria, `?id=${visitaDiaria.ID}&ruta=${visitaDiaria.ruta}` );
     const options = {
       headers: {
           'Content-Type': 'application/json',

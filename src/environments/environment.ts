@@ -15,7 +15,7 @@ export const environment = {
   clientesISAURL: 'IMA_Clientes/',
   clientesIMAURL: 'Clientes/',
   rolVisitaURL: 'IMA_Visitas/',
-  visitaDiaria: 'Visita/',
+  visitaDiaria: 'VisitaDiaria/',
   productosURL: 'IMA_Productos/',
   ruteroPostURL: 'Rutero/',
   detalleRutURL: 'RuteroDet/',
