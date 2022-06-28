@@ -134,6 +134,9 @@ export class EliaService {
         });
       }, error => {
         console.log(error.message);
+        if (localStorage.getItem('ELIAclientes')){
+          localStorage.removeItem('ELIAclientes');
+        }
       }
     );
   }
@@ -209,7 +212,7 @@ export class EliaService {
   }
 
   private getProductos( idCliente: string ){
-    const URL = this.getIMAURL( environment.productosURL, idCliente );
+    const URL = this.getISAURL( environment.productosURL, idCliente );
     return this.http.get<ProductosBD[]>( URL );
   }
 

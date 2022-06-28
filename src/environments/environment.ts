@@ -16,13 +16,13 @@ export const environment = {
   clientesIMAURL: 'Clientes/',
   rolVisitaURL: 'IMA_Visitas/',
   visitaDiaria: 'VisitaDiaria/',
-  productosURL: 'IMA_Productos/',
+  productosURL: 'IMA_ProdTienda/',
   ruteroPostURL: 'Rutero/',
   detalleRutURL: 'RuteroDet/',
   faltante: "../../../assets/icon/faltante.png",
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
-  version: "1.0.0",
+  version: "1.1.0",
   prdMode: true,
 };
 
