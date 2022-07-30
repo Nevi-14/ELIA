@@ -76,7 +76,8 @@ export class ClientesPage implements OnInit {
     clientes.push(pdv);
     localStorage.setItem('ELIAclientes', JSON.stringify(clientes));
     this.tareas.cargarClientes();
-    this.modalCtrl.dismiss({check: true});
+    this.elia.syncProductos(pdv.idWM, 1, 2, true);
+    // this.modalCtrl.dismiss({check: true});
   }
 
   salir(){

@@ -220,7 +220,7 @@ export class EliaService {
     let item: Productos;
     let productos: Productos[] = [];
 
-    if ( i === 0 ){
+    if ( i === 0 ){                          // Si es el primer cliente que sincroniza borra la tabla de Productos
       this.storage.remove('ELIAProductos');
     }
     this.getProductos( idCliente ).subscribe(
@@ -263,7 +263,7 @@ export class EliaService {
   }
 
   private postRutero( rutero: RuteroBD ){
-    const URL = this.getIMAURL( environment.ruteroPostURL, '' );
+    const URL = this.getISAURL( environment.ruteroPostURL, '' );
     const options = {
       headers: {
           'Content-Type': 'application/json',

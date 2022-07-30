@@ -38,39 +38,51 @@ export class Tab1Page {
   async checkIn( i: number ){
     console.log(i);
     this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
-    if (!this.tareas.rutero[i].visitado){            // Validamos si el cliente ya fue visita
-      if ( this.tareas.rutero[i].checkIn === null ){   // Validamos si NO se hizo check in en el cliente para invocar el check in
-        const modal = await this.modalCtrl.create({
-          component: CheckinPage,
-          componentProps: {
-            'pdv': this.tareas.rutero[i]
-          },
-          cssClass: 'my-custom-class'
-        });
-        await modal.present();
-        const {data} = await modal.onDidDismiss();
-        if ( data.check ){
-          //this.tareas.presentAlertW('Geo Location', data.latitud + ' ' + data.longitud);
-          this.tareas.rutero[i].latitud = data.latitud;
-          this.tareas.rutero[i].longitud = data.longitud;
-          this.tareas.rutero[i].sinMarcas = data.sinMarcas;
-          if ( !data.sinMarcas ){
+    if (!this.tareas.varConfig.almuerzoTime) {             // Sino es tiempo de almuerzo activado
+      if (!this.tareas.rutero[i].visitado){               // Validamos si el cliente ya fue visita
+        if ( this.tareas.rutero[i].checkIn === null ){   // Validamos si NO se hizo check in en el cliente para invocar el check in
+          const modal = await this.modalCtrl.create({
+            component: CheckinPage,
+            componentProps: {
+              'pdv': this.tareas.rutero[i]
+            },
+            cssClass: 'my-custom-class'
+          });
+          await modal.present();
+          const {data} = await modal.onDidDismiss();
+          if ( data.check ){
+            //this.tareas.presentAlertW('Geo Location', data.latitud + ' ' + data.longitud);
+            this.tareas.rutero[i].latitud = data.latitud;
+            this.tareas.rutero[i].longitud = data.longitud;
+            this.tareas.rutero[i].sinMarcas = data.sinMarcas;
+            if ( !data.sinMarcas ){
+              this.abrirFaltantes(i);
+            } else {
+              this.abrirCheckOut(i);
+            }
+          }
+        } else if ( this.tareas.rutero[i].checkIn !== null && this.tareas.rutero[i].checkBodega === null ){
+          if ( !this.tareas.rutero[i].sinMarcas ){
             this.abrirFaltantes(i);
           } else {
             this.abrirCheckOut(i);
           }
+        } else if ( this.tareas.rutero[i].checkBodega !== null ){
+          this.abrirBodega(i);
         }
-      } else if ( this.tareas.rutero[i].checkIn !== null && this.tareas.rutero[i].checkBodega === null ){
-        if ( !this.tareas.rutero[i].sinMarcas ){
-          this.abrirFaltantes(i);
-        } else {
-          this.abrirCheckOut(i);
-        }
-      } else if ( this.tareas.rutero[i].checkBodega !== null ){
-        this.abrirBodega(i);
+      } else {
+        this.abrirResumen(i);
       }
     } else {
-      this.abrirResumen(i);
+      const modal = await this.modalCtrl.create({
+        component: AlmuerzoPage,
+        componentProps: {
+          'crono': 60
+        },
+        cssClass: 'my-custom-class'
+      });
+      await modal.present();
+      const {data} = await modal.onDidDismiss();
     }
   }
 

@@ -3,7 +3,6 @@ import { TareasService } from 'src/app/services/tareas.service';
 import * as countdown from 'countdown';
 import { ModalController } from '@ionic/angular';
 
-
 interface Time {
   minutes: number,
   seconds: number,
@@ -23,7 +22,9 @@ export class AlmuerzoPage implements OnInit {
   timerId: number = null;
 
   constructor( private tareas: TareasService,
-               private modalCtrl: ModalController ) { }
+               private modalCtrl: ModalController ) { 
+    
+  }
 
   ngOnInit() {
     console.log(this.tareas.varConfig.horaAlmuerzo);
@@ -40,6 +41,7 @@ export class AlmuerzoPage implements OnInit {
       }, countdown.MINUTES | countdown.SECONDS);
     } else {
       console.log('El tiempo de Almuerzo acabó...');
+      this.tareas.presentAlertW('Almuerzo', 'El tiempo de almuerzo finalizó');
       this.regresar();
     }
   }
