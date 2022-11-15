@@ -16,6 +16,7 @@ import { TareasService } from './tareas.service';
 export class EliaService {
 
   loading: HTMLIonLoadingElement;
+  isLoading: boolean = false;
 
   constructor( private http: HttpClient,
                private storage: Storage,
@@ -29,15 +30,26 @@ export class EliaService {
     await this.storage.create();
   }
 
-  private async presentaLoading( mensaje: string ){
-    this.loading = await this.loadingCtrl.create({
-      message: mensaje,
+  async presentaLoading( message: string ){
+    this.isLoading = true;
+    this.loadingCtrl.create({
+      message: message ? message : 'Please wait...'
+    }).then(loader => {
+      loader.present().then(() => {
+        if (!this.isLoading) {
+          loader.dismiss();
+        }
+      });
     });
-    await this.loading.present();
   }
 
-  private loadingDissmiss(){
-    this.loading.dismiss();
+  async loadingDissmiss(){
+    this.isLoading = false;
+    this.loadingCtrl.getTop().then(loader => {
+      if (loader) {
+        loader.dismiss();
+      }
+    });
   }
 
   async guardarSKUS( productos: Productos[] ){
@@ -167,6 +179,7 @@ export class EliaService {
   syncRolVisita( ruta: string, dia: string ){
     let i: number;
 
+    console.log('Día: ', dia);
     this.getRolVisita(dia).subscribe(
       resp => {
         console.log('Rol de Visita dia: ', resp );

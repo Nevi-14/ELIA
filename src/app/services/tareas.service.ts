@@ -53,15 +53,19 @@ export class TareasService {
     this.pdvs = JSON.parse(localStorage.getItem('ELIAclientes')!) || [];
   }
   
-  cargarRutero(){
+  cargarRutero(){ //debugger
     let visita: VisitaDiaria;
+    let dia: number;
 
     if (localStorage.getItem('ELIAvisitaDiaria')){
       this.rutero = JSON.parse(localStorage.getItem('ELIAvisitaDiaria'));
     } else {
       if ( this.pdvs.length > 0 ){
         this.rutero = [];
-        const dia = (new Date().getDay()) - 1;
+        dia = (new Date().getDay()) - 1;
+        if (dia === -1){
+          dia = 6;         // Día es domingo
+        }
         this.pdvs.forEach( d => {
           if (d.diasVisita[dia] === 'X'){
             visita = new VisitaDiaria( d.id, d.nombre, d.horaVisita, 0, 0, this.varConfig.agente, d.orden );
