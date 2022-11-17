@@ -22,8 +22,8 @@ export const environment = {
   faltante: "../../../assets/icon/faltante.png",
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
-  version: "1.1.0",
-  prdMode: false,
+  version: "1.2.0",
+  prdMode: true,
 };
 
 /*

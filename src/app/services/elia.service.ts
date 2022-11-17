@@ -92,7 +92,6 @@ export class EliaService {
       //test = environment.TestURL;
     }
     const URL = environment.preURL + test + environment.postURL + api + id;
-    console.log(URL);
     return URL;
   }
 
@@ -391,7 +390,6 @@ export class EliaService {
         this.tareas.presentaToast('Error de Envío...!!!');
       }
     );
-    console.log(JSON.stringify(item));
   }
 
   private postRuteroDetalle( detalle: RuteroDetBD[] ){
@@ -402,6 +400,7 @@ export class EliaService {
           'Accept': 'application/json'
       }
     };
+    console.log(JSON.stringify(detalle));
     return this.http.post( URL, JSON.stringify(detalle), options );
   }
 

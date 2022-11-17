@@ -233,6 +233,7 @@ export class CheckOutPage {
   async checkOut(){
     const alert = await this.alertCtl.create({
       cssClass: 'my-custom-class',
+      mode: 'ios',
       header: 'Check Out',
       message: 'Desea realizar el Check Out?',
       buttons: [
@@ -242,17 +243,10 @@ export class CheckOutPage {
           cssClass: 'secondary',
           handler: () => {
             console.log('Confirm Cancel');
-            this.ionList.closeSlidingItems();
           }
         }, {
-          text: 'Ok',
-          handler: () => {
-            this.tareas.rutero[this.i].checkOut = new Date();
-            this.tareas.rutero[this.i].visitado = true;
-            this.tareas.guardarVisitas();
-            this.bd.updateRutero( this.tareas.rutero[this.i] );
-            this.modalCtrl.dismiss({check: true});
-            this.ionList.closeSlidingItems();
+          text: 'Si',
+          handler: () => { //debugger
             this.modalCtrl.dismiss({check: true});
           }
         }
