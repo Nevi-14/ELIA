@@ -33,18 +33,36 @@
  
   </ion-item>
   <ion-item>
-    <ion-label>Repeticiones 
-      <p class="ion-text-wrap" style="margin-top: 0.5rem;">Cantidad de veces a efectuar la pregunta!.</p>
-    </ion-label>
+    <ion-label>Repeticiones </ion-label>
     <ion-badge slot="end" color="primary" mode="ios">{{encuesta.repite}}</ion-badge>
   </ion-item>
 </ion-list>
 
+<ion-grid  *ngIf="encuesta.tipo_Respuesta == 'TEXT'">
+  <ion-row>
+    <ion-col size="12">
+<ion-toolbar>
+  <ion-title><strong>Mis Respuestas</strong></ion-title>
+  <ion-fab-button slot="end" color="dark" size="small">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-toolbar>
+    </ion-col>
+    <ion-col size="12">
+      <ion-input class="description" type="text" placeholder="respuesta"></ion-input>
+    </ion-col>
+    <ion-col size="12">
+      <ion-button  expand="block" fill="solid"  color="dark">
+        Agregar Respuesta
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
 <ion-list>
-  <ion-toolbar>
-    <ion-title><strong>Mis Respuestas</strong></ion-title>
-   
-  </ion-toolbar>
+  <ion-list-header>
+    <ion-label>Mis Respuestas</ion-label>
+ 
+  </ion-list-header>
   <ion-item *ngFor="let itrm of [1,1,1,1,1]">
     <ion-label>Awesome Label</ion-label>
   </ion-item>

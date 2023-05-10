@@ -13,6 +13,8 @@
   },
   "private": true,
   "dependencies": {
+    "@angular-devkit/core": "^16.0.0",
+    "@angular-devkit/schematics": "^16.0.0",
     "@angular/common": "~13.4.0",
     "@angular/core": "~13.4.0",
     "@angular/forms": "~13.4.0",
@@ -28,6 +30,7 @@
     "@ionic/angular": "^6.7.4",
     "@ionic/storage": "^3.0.4",
     "@ionic/storage-angular": "^3.0.6",
+    "@schematics/angular": "^16.0.0",
     "cordova-plugin-geolocation": "^4.1.0",
     "countdown": "^2.6.0",
     "phonegap-plugin-barcodescanner": "^8.1.0",

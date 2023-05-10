@@ -8,6 +8,7 @@ import { EncuestasPageRoutingModule } from './encuestas-routing.module';
 
 import { EncuestasPage } from './encuestas.page';
 import { ComponentModule } from 'src/app/components/component.module';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { ComponentModule } from 'src/app/components/component.module';
     FormsModule,
     IonicModule,
     EncuestasPageRoutingModule,
-    ComponentModule
+    ComponentModule,
+    PipesModule
   ],
   declarations: [EncuestasPage]
 })

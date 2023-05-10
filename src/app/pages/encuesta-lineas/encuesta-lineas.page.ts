@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { ModalController } from '@ionic/angular';
+import { EncuestasClienteVista } from 'src/app/models/encuestasClienteVista';
 
 @Component({
   selector: 'app-encuesta-lineas',
@@ -6,10 +8,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./encuesta-lineas.page.scss'],
 })
 export class EncuestaLineasPage implements OnInit {
-
-  constructor() { }
+@Input() encuesta:EncuestasClienteVista
+  constructor(
+  public modalCtrl:ModalController  
+  ) { }
 
   ngOnInit() {
+    console.log(this.encuesta)
   }
+  regresar(){
+    this.modalCtrl.dismiss();
 
+  }
 }
