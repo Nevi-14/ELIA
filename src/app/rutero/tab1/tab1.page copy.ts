@@ -9,8 +9,6 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { EliaService } from 'src/app/services/elia.service';
 import { AlmuerzoPage } from '../almuerzo/almuerzo.page';
 import { CheckOutPage } from '../check-out/check-out.page';
-import { VisitaDiaria } from 'src/app/models/rutero';
-import { EncuestasPage } from 'src/app/pages/encuestas/encuestas.page';
 
 @Component({
   selector: 'app-tab1',
@@ -37,28 +35,6 @@ export class Tab1Page {
     }
   }
 
-  opciones(visita:VisitaDiaria){
-console.log('visita', visita)
-this.encuestas(visita)
-  }
-
-  async encuestas(visita:VisitaDiaria){
- 
-    const modal = await this.modalCtrl.create({
-      component: EncuestasPage,
-      mode: 'ios',
-      initialBreakpoint: 0.55,
-      breakpoints: [0, 0.25, 0.5, 0.75],
-      componentProps: {
-        visita
-      },
-      cssClass: 'my-custom-class',
-      
-    });
-    await modal.present();
-    const {data} = await modal.onDidDismiss();
-    
-  }
   async checkIn( i: number ){
     console.log(i);
     this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);

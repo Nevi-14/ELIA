@@ -22,6 +22,10 @@ export const environment = {
   faltante: "../../../assets/icon/faltante.png",
   bajoStock: "../../../assets/icon/bajo.png",
   okStock: "../../../assets/icon/ok.png",
+  
+  // Encuestas
+  getEncuetasClienteVista:'get/encuentas/cliente/vista?id=',
+  
   version: "1.2.0",
   prdMode: true,
 };

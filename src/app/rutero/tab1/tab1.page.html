@@ -15,7 +15,7 @@
   </ion-fab>
   
   <ion-list>
-    <ion-item *ngFor="let item of tareas.rutero; let i = index" (click)="checkIn(i)">
+    <ion-item *ngFor="let item of tareas.rutero; let i = index" (click)="opciones(item)">
       <ion-text>{{item.orden}} - {{item.idPDV}} {{item.nombre}} ({{item.latitud}}, {{item.longitud}})</ion-text>
       <ion-icon name="bookmark-outline" slot="end" [color]="item.visitado ? 'success' : 'dark'"></ion-icon>
     </ion-item>

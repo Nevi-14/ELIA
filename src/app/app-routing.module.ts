@@ -53,7 +53,15 @@ const routes: Routes = [
   {
     path: 'clientes',
     loadChildren: () => import('./configuracion/clientes/clientes.module').then( m => m.ClientesPageModule)
+  },  {
+    path: 'encuestas',
+    loadChildren: () => import('./pages/encuestas/encuestas.module').then( m => m.EncuestasPageModule)
+  },
+  {
+    path: 'encuesta-lineas',
+    loadChildren: () => import('./pages/encuesta-lineas/encuesta-lineas.module').then( m => m.EncuestaLineasPageModule)
   }
+
 ];
 @NgModule({
   imports: [
