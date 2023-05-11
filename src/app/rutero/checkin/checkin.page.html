@@ -1,41 +1,28 @@
 <ion-header class="ion-no-border">
   <ion-toolbar>
-    <ion-buttons>
-      <ion-button (click)="regresar()" shape="round" slot="start">
-        <ion-icon name="chevron-back-outline"></ion-icon>
-        Back
-      </ion-button>
-    </ion-buttons>
+    <ion-label slot="start">
+      <h6><strong>SIN MARCAS</strong></h6>
+    </ion-label>
+      <ion-toggle slot="end" [(ngModel)]="sinMarcas"></ion-toggle>
   </ion-toolbar>
 </ion-header>
 
-<ion-content no-border>
-  <ion-slides class="mainSlide">
-    <ion-slide>
+<ion-content no-border class="ion-padding">
 
-      <ion-grid fixed>
-        <ion-row>
-          <ion-col>
-            <ion-item>
-              <ion-label>{{pdv.nombre}}</ion-label>
-            </ion-item>
-          </ion-col>
-        </ion-row>
-        <ion-row>
-          <ion-col>
-            <ion-button color="primary" type="submit" shape="round" (click)="checkIn()">Check In</ion-button>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
+  <ion-grid >
+    <ion-row>
+      <ion-col size="12">
+        <ion-item>
+          <ion-label>{{pdv.nombre}}</ion-label>
+        </ion-item>
+      </ion-col>
 
-    </ion-slide>
-  </ion-slides>
+      <ion-col size="12" class="ion-text-center">
+        <ion-button color="primary" type="submit" shape="round" (click)="checkIn()">Check In</ion-button>
+      </ion-col>
+    </ion-row>
+ 
+    
+  </ion-grid>
 </ion-content>
-<ion-footer class="ion-no-border">
-  <ion-toolbar>
-    <ion-item>
-      <ion-label class="ion-text-right">Sin Marcas</ion-label>
-      <ion-toggle [(ngModel)]="sinMarcas"></ion-toggle>
-    </ion-item>
-  </ion-toolbar>
-</ion-footer>
+ 

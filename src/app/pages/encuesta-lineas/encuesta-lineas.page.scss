@@ -10,6 +10,10 @@ ion-grid, ion-row, ion-col{
     padding: 0;
 }
 }
+ion-item-sliding,ion-item-option{
+    --padding:0;
+padding:0;
+}
 ion-col ion-label{
     font-size: 14px;
  
@@ -27,10 +31,7 @@ ion-input {
     text-indent: 0.5rem;
 }
  
-ion-fab-button {
-    --box-shadow: none!important;
-}
- 
+
 .description{
 height: 4rem;
 }
@@ -46,4 +47,14 @@ ion-modal::part(content) {
   ion-avatar{
     height: 3rem;
     width: 3rem;
+  }
+
+  ion-toolbar{
+    ion-fab-button {
+        --box-shadow: none!important;
+        width: 2rem;
+        height: 2rem;
+        margin-right: 1rem;
+    }
+     
   }

@@ -15,16 +15,24 @@
 </ion-header>
 <ion-content>
    <ion-list>
-    <ion-item (click)="encuestaLinea(encuesta)" *ngFor="let encuesta of encuestas" detail>
+    <ion-item (click)="encuestaLinea(encuesta)" *ngFor="let encuesta of encuestasService.encuestas" detail>
+
       <ion-label>
-        {{encuesta.tipo_Respuesta == 'SEUN' ? 'Selección Unica' : encuesta.tipo_Respuesta == 'SEMU' ? 'Selección multiple' : 'Respuesta Corta' }} 
+    
+        {{encuesta.tipo_Respuesta == 'SEUN' ? 'Selección Unica' : encuesta.tipo_Respuesta == 'SEMU' ? 'Selección multiple' :  encuesta.tipo_Respuesta == 'TEXT' ? 'Respuesta Corta' : 'Pregunta Dicotómatica' }} 
         <p class="ion-text-wrap" style="margin-top: 0.5rem;">
+       
+     
           {{encuesta.pregunta}}
         </p>
 
       </ion-label>
     </ion-item>
- 
+    <ion-item *ngIf="encuestasService.encuestas.length == 0">
+      <ion-label class="ion-text-wrap">
+        No datos que mostrar....
+      </ion-label>
+    </ion-item>
    </ion-list>
 </ion-content>
  

@@ -9,7 +9,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-
+  showPass = false;
   usuarioForm = {
     usuarioF: '',
     claveF: '',

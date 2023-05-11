@@ -26,6 +26,11 @@ export const environment = {
   // Encuestas
   getEncuetasClienteVista:'get/encuentas/cliente/vista?id=',
   
+  // respuestas
+  getRespuestasEncuestaLinea:'get/respuestas/encuenta/linea?id=',
+  postRespuestaEncuestaLinea:'post/respuesta/encuesta/linea',
+  deleteRespuestaEncuestaLinea:'delete/respuesta/encuesta/linea?id=',
+
   version: "1.2.0",
   prdMode: true,
 };

@@ -2,12 +2,15 @@ import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { AlertController, IonList, ModalController, PopoverController } from '@ionic/angular';
 import { PDV } from 'src/app/models/pdv';
 import { Articulos, Productos } from 'src/app/models/productos';
-import { DetalleVisita } from 'src/app/models/rutero';
+import { DetalleVisita, VisitaDiaria } from 'src/app/models/rutero';
 import { TareasService } from 'src/app/services/tareas.service';
 import { environment } from 'src/environments/environment';
 import { BarcodeScanner } from '@ionic-native/barcode-scanner/ngx';
 import { PenArrayPage } from '../pen-array/pen-array.page';
 import { EliaService } from 'src/app/services/elia.service';
+import { EncuestasPage } from 'src/app/pages/encuestas/encuestas.page';
+import { EncuestasService } from 'src/app/services/encuestas.service';
+import { RespuestasEncuestasService } from 'src/app/services/respuestas-encuestas.service';
 
 @Component({
   selector: 'app-faltantes',
@@ -37,9 +40,17 @@ export class FaltantesPage implements OnInit {
                private elia: EliaService,
                private alertCtl: AlertController,
                private barcodeScanner: BarcodeScanner,
-               private popoverCtrl: PopoverController ) {}
+               private popoverCtrl: PopoverController,
+               public encuestasService:EncuestasService,
+               public respuestasEncuestasService: RespuestasEncuestasService
+               ) {}
 
   ngOnInit() {
+    this.encuestasService.syncGetEncuestasClienteVista(this.respuestasEncuestasService.visita.idPDV).then( encuestas =>{
+      this.encuestasService.encuestas = encuestas;
+    }, error =>{
+      console.log('error', error)
+    })
     this.nombrePDV = this.pdv.nombre;
     this.cargarProductos( this.pdv.idWM );
     this.cargarArticulos();
@@ -62,7 +73,20 @@ export class FaltantesPage implements OnInit {
     this.articulos = await this.elia.cargarArticulos();
     console.log( this.articulos );
   }
-
+  async encuestas(){
+ 
+    const modal = await this.modalCtrl.create({
+      component: EncuestasPage,
+      mode: 'ios',
+      initialBreakpoint: 0.55,
+      breakpoints: [0, 0.25, 0.5, 0.75],
+      cssClass: 'my-custom-class',
+      
+    });
+    await modal.present();
+    const {data} = await modal.onDidDismiss();
+    
+  }
   buscarProducto(){ 
     if (this.texto.length > 0){
       if (isNaN(+this.texto)) {            // Se buscará por nombre de producto

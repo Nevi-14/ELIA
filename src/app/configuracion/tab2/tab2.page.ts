@@ -6,6 +6,7 @@ import { AdminPage } from '../admin/admin.page';
 import { LoginPage } from '../login/login.page';
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ClientesPage } from '../clientes/clientes.page';
+import { InformacionPage } from 'src/app/pages/informacion/informacion.page';
 
 @Component({
   selector: 'app-tab2',
@@ -107,5 +108,16 @@ export class Tab2Page {
       this.tareas.guardarVisitas();
     }
   }
+  async informacion() {
 
+    const modal = await this.modalCtrl.create({
+      component: InformacionPage,
+      mode: 'md' 
+    })
+    await modal.present();
+    const { data } = await modal.onDidDismiss();
+    if (data != undefined) {
+    
+    }
+  }
 }

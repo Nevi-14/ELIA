@@ -1,0 +1,88 @@
+ 
+<ion-content >
+ 
+  
+<ion-header class="ion-no-border">
+ 
+
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" style="display: flex;justify-content:space-between;align-items: center;">
+    
+<h6 class="ion-text-wrap"><strong>Adjuntar Respuesta</strong></h6>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+<ion-grid  *ngIf="encuesta.tipo_Respuesta == 'TEXT'">
+  <ion-row>
+ 
+    <ion-col size="12">
+      <ion-input [(ngModel)]="text" class="description" type="text" placeholder="respuesta"></ion-input>
+    </ion-col>
+    <ion-col size="12">
+      <ion-button (click)="retordarDatos()"   expand="block" fill="solid"  color="dark">
+        Agregar Respuesta
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+<ion-grid  *ngIf="encuesta.tipo_Respuesta == 'SUSN'">
+  <ion-row>
+ 
+    <ion-col size="12">
+      <ion-radio-group name="auto" [(ngModel)]="susn">
+        <ion-item *ngFor="let opcion of opciones">
+          <ion-label>{{opcion}}</ion-label>
+          <ion-radio  [value]="opcion"></ion-radio>
+        </ion-item>
+       
+      </ion-radio-group>
+    </ion-col>
+    <ion-col size="12">
+      <ion-button (click)="retordarDatos()"  expand="block" fill="solid"  color="dark">
+        Agregar Respuesta
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+<ion-grid  *ngIf="encuesta.tipo_Respuesta == 'SEUN'">
+  <ion-row>
+ 
+    <ion-col size="12">
+      <ion-radio-group name="auto" [(ngModel)]="seun">
+        <ion-item *ngFor="let opcion of opciones">
+          <ion-label>{{opcion}}</ion-label>
+          <ion-radio  [value]="opcion"></ion-radio>
+        </ion-item>
+       
+      </ion-radio-group>
+    </ion-col>
+    <ion-col size="12">
+      <ion-button (click)="retordarDatos()"  expand="block" fill="solid"  color="dark">
+        Agregar Respuesta
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+<ion-grid  *ngIf="encuesta.tipo_Respuesta == 'SEMU'">
+  <ion-row>
+ 
+    <ion-col size="12">
+ <ion-item *ngFor="let opcion of opciones">
+  <ion-label>{{opcion}}</ion-label>
+  <ion-checkbox (ionChange)="agregarSeleccionMultiple($event)" [value]="opcion" slot="end"></ion-checkbox>
+ </ion-item>
+
+    </ion-col>
+    <ion-col size="12">
+      <ion-button (click)="retordarDatos()"  expand="block" fill="solid"  color="dark">
+        Agregar Respuesta
+      </ion-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>

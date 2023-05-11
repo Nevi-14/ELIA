@@ -1,13 +1,13 @@
 {
-  "appId": "cr.sde.elia",
-  "appName": "IMApp",
-  "bundledWebRuntime": false,
-  "npmClient": "npm",
-  "webDir": "www",
-  "plugins": {
-    "SplashScreen": {
-      "launchShowDuration": 3000
-    }
-  },
-  "cordova": {}
+	"appId": "cr.sde.elia",
+	"appName": "IMApp",
+	"bundledWebRuntime": false,
+	"npmClient": "npm",
+	"webDir": "www",
+	"plugins": {
+		"SplashScreen": {
+			"launchShowDuration": 3000
+		}
+	},
+	"cordova": {}
 }

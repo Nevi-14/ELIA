@@ -1,12 +1,12 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar color="dark">
     <ion-title>Pendientes</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content class="ion-padding">
   <ion-list>
-    <ion-item *ngFor="let item of productos">
+    <ion-item *ngFor="let item of productos" detail>
       <ion-label>{{ item.id }} - {{ item.nombre }}</ion-label>
     </ion-item>
   </ion-list>

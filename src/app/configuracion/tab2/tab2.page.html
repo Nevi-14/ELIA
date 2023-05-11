@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar color="dark">
     <ion-title>
       Configuración - {{tareas.varConfig.ruta}}
     </ion-title>
@@ -7,35 +7,65 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-grid fixed>
+  <ion-grid  style="height: 100%;display: flex;justify-content: center;align-items: center;">
 
-    <ion-row style="height:120px">
+
+
+
+
+    <ion-row>
       <ion-col size="6">
-        <ion-card button="true" (click)="abrirLogin()">
-          <img src="../../../assets/icon/datos2.png" />
-          <ion-card-header color="light">
-            <ion-card-title>Admin</ion-card-title>
+        <ion-card (click)="abrirLogin()" button >
+          <img src="assets/icon/datos2.png" alt="">
+          <ion-card-header>
           </ion-card-header>
+          <ion-card-content  class="ion-text-center">
+         <ion-label  ><strong>Administrador</strong></ion-label>
+          </ion-card-content>
         </ion-card>
       </ion-col>
       <ion-col size="6">
-        <ion-card button="true" (click)="sincronizar()">
-          <img src="../../../assets/icon/admin.png" />
-          <ion-card-header  color="light">
-            <ion-card-title>Sincroniza</ion-card-title>
+
+        <ion-card (click)="sincronizar()" button >
+          <img src="assets/icon/admin.png" alt="">
+          <ion-card-header>
           </ion-card-header>
+          <ion-card-content  class="ion-text-center">
+         <ion-label ><strong>Sincronizar</strong></ion-label>
+          </ion-card-content>
         </ion-card>
+
+ 
       </ion-col>
       <ion-col size="6">
-        <ion-card button="true" (click)="agregarPdv()">
-          <img src="../../../assets/icon/pdvMas.png" />
-          <ion-card-header  color="light">
-            <ion-card-title>Agregar</ion-card-title>
+        <ion-card (click)="agregarPdv()" button >
+          <img src="assets/icon/store.svg" alt="">
+          <ion-card-header>
           </ion-card-header>
+          <ion-card-content  class="ion-text-center">
+         <ion-label><strong>Agregar</strong></ion-label>
+          </ion-card-content>
         </ion-card>
+
+
+ 
+      </ion-col>
+
+      <ion-col size="6">
+        <ion-card (click)="informacion()" button >
+          <img src="assets/icon/information.svg" alt="">
+          <ion-card-header>
+          </ion-card-header>
+          <ion-card-content  class="ion-text-center">
+         <ion-label><strong>Información</strong></ion-label>
+          </ion-card-content>
+        </ion-card>
+
+
+ 
       </ion-col>
     </ion-row>
 
-    <p></p>
+ 
   </ion-grid>
 </ion-content>

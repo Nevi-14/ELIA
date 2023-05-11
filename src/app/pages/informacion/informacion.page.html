@@ -1,0 +1,56 @@
+<ion-header class="ion-no-border">
+ 
+  <ion-toolbar  >
+
+ 
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" style="display: flex;justify-content: space-between;align-items: center;">
+          <ion-button  (click)="regresar()" fill="clear">
+            <ion-icon  size="large" name="chevron-back-outline"></ion-icon>
+          </ion-button>
+          <ion-title  class="ion-text-uppercase ion-text-right">
+   Elia
+           </ion-title>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-header>
+ 
+<ion-content class="ion-padding">
+
+  <ion-list>
+    <ion-item lines="none">
+      <ion-grid >
+        <ion-row>
+          <ion-col size="12">
+            <ion-label class="ion-text-wrap">
+              Aplicación desarollada por
+            </ion-label>
+          </ion-col>
+          <ion-col size="12">
+            <h6> <strong class="ion-text-uppercase">Simple Design Experience</strong></h6>
+          </ion-col>
+          <ion-col size="12">
+            <p class="ion-text-wrap">
+              Creando soluciones a la medida!.
+            </p>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+      
+    </ion-item>
+
+ 
+ 
+  </ion-list>
+  
+</ion-content>
+<ion-footer class="ion-no-border" >
+  <ion-toolbar>
+    <ion-button   color="primary" size="small" slot="end">
+      &copy; {{year}} SDE - V1.2.1
+    </ion-button>
+  </ion-toolbar>
+</ion-footer>

@@ -6,7 +6,7 @@
           <ion-button (click)="regresar()" fill="clear">
             <ion-icon size="large" name="chevron-back-outline"></ion-icon>
           </ion-button>
-<h6 class="ion-text-wrap" style="margin-right: 0.5rem;"><strong> {{encuesta.tipo_Respuesta == 'SEUN' ? 'Selección Unica' : encuesta.tipo_Respuesta == 'SEMU' ? 'Selección multiple' : 'Respuesta Corta' }} </strong></h6>
+<h6 class="ion-text-wrap" style="margin-right: 0.5rem;"><strong> {{encuesta.tipo_Respuesta == 'SEUN' ? 'Selección Unica' : encuesta.tipo_Respuesta == 'SEMU' ? 'Selección multiple' :  encuesta.tipo_Respuesta == 'TEXT' ? 'Respuesta Corta' : 'Pregunta Dicotómatica' }} </strong></h6>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -38,15 +38,43 @@
     </ion-label>
     <ion-badge slot="end" color="primary" mode="ios">{{encuesta.repite}}</ion-badge>
   </ion-item>
+  <ion-item>
+    <ion-label>Repeticiones Restantes 
+      <p class="ion-text-wrap" style="margin-top: 0.5rem;">Cantidad de veces a efectuar la pregunta!.</p>
+    </ion-label>
+    <ion-badge slot="end" color="primary" mode="ios">{{encuesta.repite - respuestasEncuestasService.respuestas.length}}</ion-badge>
+  </ion-item>
 </ion-list>
 
 <ion-list>
   <ion-toolbar>
     <ion-title><strong>Mis Respuestas</strong></ion-title>
-   
+   <ion-fab-button *ngIf="encuesta.repite > respuestasEncuestasService.respuestas.length"  slot="end" color="dark" (click)="formulario()">
+    <ion-icon name="add"></ion-icon>
+   </ion-fab-button>
   </ion-toolbar>
-  <ion-item *ngFor="let itrm of [1,1,1,1,1]">
-    <ion-label>Awesome Label</ion-label>
+
+  <ion-item-sliding *ngFor="let respuesta of respuestasEncuestasService.respuestas ">
+    <ion-item-options side="start" style="display: flex;justify-content: flex-start;align-items: center;">
+      <ion-button (click)="borrarRespuestaEncuesta(respuesta)"   fill="clear"  >
+        <ion-icon color="danger" name="trash"></ion-icon>
+       </ion-button>
+    </ion-item-options>
+    <ion-item>
+      <ion-label class="ion-text-wrap">
+        <p style="margin-bottom: 0.5rem;"> {{respuesta.fecha | date :'short' }}</p>
+        {{respuesta.respuesta}}
+      </ion-label>
+    </ion-item>
+
+    
+  </ion-item-sliding>
+
+
+  <ion-item *ngIf="respuestasEncuestasService.respuestas.length == 0">
+    <ion-label class="ion-text-wrap">
+      No datos que mostrar....
+    </ion-label>
   </ion-item>
 </ion-list>
 </ion-content>

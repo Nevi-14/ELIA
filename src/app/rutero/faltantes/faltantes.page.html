@@ -1,33 +1,42 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-buttons>
-      <ion-button (click)="presentAlert('Desea salir...', 'Salir')" fill="clear" slot="start">
-        <ion-icon name="chevron-back-outline"></ion-icon>
-      </ion-button>
-      <ion-title class="ion-text-center">Faltantes</ion-title>
-      <ion-button (click)="salvar()" fill="clear" slot="end" size="medium">
-        <ion-icon name="save-outline" size="large" [color]="sinSalvar ? 'danger': 'light'" ></ion-icon>
-      </ion-button>
-      <ion-button (click)="presentAlert('Continuar proceso de Bodega...', 'Bodega')" fill="clear" slot="end" size="medium">
-        <ion-icon name="chevron-forward-outline" size="large" [color]="sinSalvar ? 'danger': 'light'" ></ion-icon>
-      </ion-button>
-    </ion-buttons>
+  <ion-toolbar color="dark">
+    <h6 slot="start" class="ion-text-wrap"><strong>FALTANTES</strong></h6>
+    <ion-fab-button slot="end" (click)="salvar()"  color="dark"  size="small">
+      <ion-icon name="save-outline"  [color]="sinSalvar ? 'danger': 'light'" ></ion-icon>
+    </ion-fab-button>
+
+    <ion-fab-button slot="end"  (click)="presentAlert('Continuar proceso de Bodega...', 'Bodega')" fill="clear"  color="dark"  size="small">
+      <ion-icon name="chevron-forward-outline"   [color]="sinSalvar ? 'danger': 'light'" ></ion-icon>
+    </ion-fab-button>
+
+
+<span slot="end" style="margin-right: 1rem;">
+  <ion-fab-button (click)="encuestas()" color="dark"  size="small">
+    <ion-icon name="notifications-outline"></ion-icon>
+  </ion-fab-button>
+  <ion-badge style="position:absolute;top: 0.5rem;right:0rem;" color="primary" mode="ios">{{encuestasService.encuestas.length}}</ion-badge>
+</span>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item color="light">
-    <ion-text color="primary">
-      <h2>{{ nombrePDV }}</h2>
-    </ion-text>
-  </ion-item>
-  <ion-item color="light">
-    <ion-label position="floating">Producto</ion-label>
-    <ion-input #input [(ngModel)]="texto" clearInput="true" (keyup.enter)="buscarProducto()"></ion-input>
-    <ion-button (click)="buscarProducto()" slot="end" size="medium" color="light">
-      <ion-icon slot="icon-only" name="barcode-outline"></ion-icon>
-    </ion-button>
-  </ion-item>
+  <ion-list>
+<ion-header>
+  <ion-toolbar  class="ion-toolbar">
+    <h6 slot="start" class="ion-text-wrap"><strong>{{ nombrePDV }}</strong></h6>
+ 
+  </ion-toolbar>
+</ion-header>
+    <ion-item translucent="true" lines="none" class="ion-margin-top ion-margin-bottom" >
+      <ion-label slot="start" class="ion-text-wrap"><strong>PRODUCTO</strong></ion-label>
+      <ion-input #input [(ngModel)]="texto" clearInput="true" (keyup.enter)="buscarProducto()"></ion-input>
+      <ion-button (click)="buscarProducto()" slot="end" size="medium" color="primary">
+        <ion-icon slot="icon-only" name="barcode-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+ 
+
 
   <ion-list *ngIf="mostrarListaProd">
     <ion-item *ngFor="let item of busquedaProd; let i = index" color="light" (click)="listaProducClick(i)">
@@ -62,7 +71,11 @@
 </ion-content>
 
 <ion-footer>
-  <ion-toolbar color="primary">
+  <ion-toolbar color="dark">
+    <ion-button (click)="presentAlert('Desea salir...', 'Salir')" style="margin-left: 0.5rem;" slot="start"  color="dark">
+      <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+     <ion-label>SALIR</ion-label>
+    </ion-button>
     <ion-title slot="end" (click)="pendientes($event)">Líneas {{linea}} de {{lineas}}</ion-title>
     <ion-buttons slot="end">
       <ion-button (click)="sinMarcas()">

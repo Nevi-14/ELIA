@@ -7,7 +7,7 @@ import { EncuestasClienteVista } from '../models/encuestasClienteVista';
   providedIn: 'root'
 })
 export class EncuestasService {
-
+  encuestas:EncuestasClienteVista[]=[];
   constructor(
     private http: HttpClient    
   ) { }

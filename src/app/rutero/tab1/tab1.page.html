@@ -1,5 +1,5 @@
 <ion-header [translucent]="true">
-  <ion-toolbar color="primary">
+  <ion-toolbar color="dark">
     <ion-title align-text-center>
       {{tareas.varConfig.ruta}} - {{hora | date : 'shortTime'}}
     </ion-title>
@@ -9,14 +9,16 @@
 <ion-content [fullscreen]="true">
 
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="horaAlmuerzo()">
+    <ion-fab-button color="dark" (click)="horaAlmuerzo()">
       <ion-icon name="fast-food-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
   
   <ion-list>
-    <ion-item *ngFor="let item of tareas.rutero; let i = index" (click)="opciones(item)">
-      <ion-text>{{item.orden}} - {{item.idPDV}} {{item.nombre}} ({{item.latitud}}, {{item.longitud}})</ion-text>
+    <ion-item *ngFor="let item of tareas.rutero; let i = index" (click)="checkIn(i,item)">
+<ion-label class="ion-text-wrap">
+  {{item.orden}} - {{item.idPDV}} {{item.nombre}} ({{item.latitud}}, {{item.longitud}})
+</ion-label>
       <ion-icon name="bookmark-outline" slot="end" [color]="item.visitado ? 'success' : 'dark'"></ion-icon>
     </ion-item>
   </ion-list>

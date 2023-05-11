@@ -1,61 +1,71 @@
+ 
 <ion-header class="ion-no-border">
-  <ion-toolbar>
-    <ion-buttons>
-      <ion-button (click)="salir()" shape="round" slot="start">
-        <ion-icon name="chevron-back-outline"></ion-icon>
-        Back
-      </ion-button>
-    </ion-buttons>
+ 
+  <ion-toolbar  >
+
+ 
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" style="display: flex;justify-content: space-between;align-items: center;">
+          <ion-button  (click)="salir()" fill="clear">
+            <ion-icon  size="large" name="chevron-back-outline"></ion-icon>
+          </ion-button>
+   <h6><strong>Iniciar Sesión</strong></h6>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
 </ion-header>
-
-<ion-content no-border>
-  <ion-slides class="mainSlide">
+<ion-content  class="ion-padding">
+  <ion-list>
     
-    <ion-slide>
+    <form #formulario="ngForm" (ngSubmit)="login()">
+      <ion-grid fixed>
 
-      <form #formulario="ngForm" (ngSubmit)="login()">
-        <ion-grid fixed>
+        <ion-row>
 
-          <ion-row>
-            <ion-col>
-              
-                <ion-list>
-                  
-                  <ion-item>
-                    <ion-label>Usuario</ion-label>
-                    <ion-input name="user"
-                                type="text"
-                                [(ngModel)]="usuarioForm.usuarioF"
-                                required></ion-input>
-                  </ion-item>
+          <ion-col size="12" class="ion-text-left">
+            <ion-label>Usuario</ion-label>
+            <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
+              <ion-input name="usuario"   [(ngModel)]="usuarioForm.usuarioF"  type="text" placeholder="Usuario" required></ion-input>
+            </ion-item>
+          </ion-col>
+      
+          <ion-col size="12" class="ion-text-left">
+            <ion-label>Contraseña</ion-label>
+            <ion-item class="ion-margin-bottom ion-margin-top" lines="none">
+              <ion-input name="password" [(ngModel)]="usuarioForm.claveF"     type="{{showPass ? 'text' : 'password'}}" placeholder="contraseña" required></ion-input>
+              <ion-icon slot="end"  item-right name="{{showPass ? 'eye' : 'eye-off'}}" (click)="showPass=!showPass"></ion-icon>
+            </ion-item>
+          </ion-col>
+      
 
-                  <ion-item>
-                    <ion-label>Password</ion-label>
-                    <ion-input name="password"
-                                type="password"
-                                [(ngModel)]="usuarioForm.claveF"
-                                required></ion-input>
-                  </ion-item>
 
-                </ion-list>
-            </ion-col>
-          </ion-row>
+          <ion-col>
+            
+              <ion-list>
+                
+           
+       
 
-          <ion-row>
-            <ion-col>
-              <ion-button [disabled]="formulario.invalid"
-                          type="submit"
-                          color="primary"
-                          shape="round">
-                Login
-              </ion-button>
-            </ion-col>
-          </ion-row>
+              </ion-list>
+          </ion-col>
+        </ion-row>
 
-        </ion-grid>
-      </form>
+        <ion-row>
+          <ion-col size="12" class="ion-text-center">
+            <ion-button [disabled]="formulario.invalid"
+                        type="submit"
+                        color="primary"
+                        shape="round">
+              Login
+            </ion-button>
+          </ion-col>
+        </ion-row>
 
-    </ion-slide>
-  </ion-slides>
+      </ion-grid>
+    </form>
+
+  </ion-list>
+ 
 </ion-content>

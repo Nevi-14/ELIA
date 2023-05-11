@@ -10,7 +10,7 @@ import { EliaService } from 'src/app/services/elia.service';
 import { AlmuerzoPage } from '../almuerzo/almuerzo.page';
 import { CheckOutPage } from '../check-out/check-out.page';
 import { VisitaDiaria } from 'src/app/models/rutero';
-import { EncuestasPage } from 'src/app/pages/encuestas/encuestas.page';
+import { RespuestasEncuestasService } from 'src/app/services/respuestas-encuestas.service';
 
 @Component({
   selector: 'app-tab1',
@@ -28,7 +28,9 @@ export class Tab1Page {
                private bd: EliaService,
                private geolocation: Geolocation,
                private alertCtrl: AlertController,
-               private loadingCtrl: LoadingController ) {
+               private loadingCtrl: LoadingController,
+               public respuestasEncuestasService:RespuestasEncuestasService
+                ) {
     this.tareas.cargarClientes();
     this.tareas.cargarRutero();
     if (this.tareas.varConfig.almuerzoTime){
@@ -37,29 +39,10 @@ export class Tab1Page {
     }
   }
 
-  opciones(visita:VisitaDiaria){
-console.log('visita', visita)
-this.encuestas(visita)
-  }
 
-  async encuestas(visita:VisitaDiaria){
- 
-    const modal = await this.modalCtrl.create({
-      component: EncuestasPage,
-      mode: 'ios',
-      initialBreakpoint: 0.55,
-      breakpoints: [0, 0.25, 0.5, 0.75],
-      componentProps: {
-        visita
-      },
-      cssClass: 'my-custom-class',
-      
-    });
-    await modal.present();
-    const {data} = await modal.onDidDismiss();
-    
-  }
-  async checkIn( i: number ){
+
+  async checkIn( i: number , visita:VisitaDiaria ){
+    this.respuestasEncuestasService.visita = visita;
     console.log(i);
     this.tareas.pdvActivo = this.tareas.pdvs.find(d => d.id === this.tareas.rutero[i].idPDV);
     if (!this.tareas.varConfig.almuerzoTime) {             // Sino es tiempo de almuerzo activado
@@ -67,6 +50,9 @@ this.encuestas(visita)
         if ( this.tareas.rutero[i].checkIn === null ){   // Validamos si NO se hizo check in en el cliente para invocar el check in
           const modal = await this.modalCtrl.create({
             component: CheckinPage,
+            mode: 'ios',
+            initialBreakpoint: 0.55,
+            breakpoints: [0, 0.25, 0.5, 0.75],
             componentProps: {
               'pdv': this.tareas.rutero[i]
             },

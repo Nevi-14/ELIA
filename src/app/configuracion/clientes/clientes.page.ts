@@ -4,6 +4,7 @@ import { ModalController, AlertController } from '@ionic/angular';
 import { ClientesBD, PDV } from '../../models/pdv';
 import { EliaService } from '../../services/elia.service';
 import { VisitaDiaria } from '../../models/rutero';
+import { AlertasService } from 'src/app/services/alertas.service';
 
 @Component({
   selector: 'app-clientes',
@@ -18,13 +19,18 @@ export class ClientesPage implements OnInit {
   constructor( private tareas: TareasService,
                private modalCtrl: ModalController,
                private alertCtrl: AlertController,
-               private elia: EliaService ) { }
+               private elia: EliaService,
+               public alertasService:AlertasService
+               ) { }
 
   ngOnInit() {
+    this.alertasService.presentaLoading('Cargando datos...')
     this.elia.getClientesIMA().subscribe(
       resp => {
         this.clientes = resp.slice(0);
+        this.alertasService.loadingDissmiss();
       }, error => {
+        this.alertasService.loadingDissmiss();
         console.log(error);
       }
     )

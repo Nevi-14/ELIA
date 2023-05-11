@@ -1,19 +1,37 @@
-<ion-header [translucent]="true">
-  <ion-toolbar color="primary">
-    <ion-buttons>
-      <ion-button (click)="salir()" fill="clear" slot="start">
-        <ion-icon name="chevron-back-outline"></ion-icon>
-      </ion-button>
-      <ion-title class="ion-text-center">Agregar Clientes - {{ tareas.varConfig.ruta }}</ion-title>
-    </ion-buttons>
+ 
+<ion-header class="ion-no-border">
+ 
+  <ion-toolbar  >
+
+ 
+    <ion-grid>
+      <ion-row>
+        <ion-col size="12" style="display: flex;justify-content: space-between;align-items: center;">
+          <ion-button  (click)="salir()" fill="clear">
+            <ion-icon  size="large" name="chevron-back-outline"></ion-icon>
+          </ion-button>
+   <h6><strong> Agregar Clientes - {{ tareas.varConfig.ruta }}</strong></h6>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-toolbar>
   <ion-searchbar mode="ios" palceholder="Buscar item" inputmode="text" (ionChange)="onSearchChange($event)" debounce="250" ></ion-searchbar>
 </ion-header>
-
 <ion-content>
   <ion-list>
-    <ion-item *ngFor="let item of clientes | filtro : textoBuscar : 'nom_Clt'">
-      <ion-text (click)="seleccion(item)" >{{item.cod_Clt}} - {{item.nom_Clt}}</ion-text>
+
+    
+  <ion-item *ngIf="clientes.length == 0">
+    <ion-label class="ion-text-wrap">
+      No datos que mostrar....
+    </ion-label>
+  </ion-item>
+
+
+    <ion-item (click)="seleccion(item)" *ngFor="let item of clientes | filtro : textoBuscar : 'nom_Clt'" detail>
+<p>
+  {{item.cod_Clt}} - {{item.nom_Clt}}
+</p>
     </ion-item>
   </ion-list>
 
