@@ -63,18 +63,25 @@ export class FormularioRespuestaPage implements OnInit {
       case 'TEXT':
         respuesta.respuesta = this.text;
         this.respuestasEncuestasService.syncPostRespuestaEncuestaToPromise(respuesta).then(resp => {
+          this.alertasService.message('ELIA','Respuesta guardada..')
           this.modalCtrl.dismiss(true)
           console.log('resp', resp)
         }, error => {
+          console.log('error', error)
+          this.alertasService.message('ELIA','Lo sentimos algo salio mal..')
           console.log('error', error)
         })
         break;
  case 'SUSN':
         respuesta.respuesta = this.susn;
         this.respuestasEncuestasService.syncPostRespuestaEncuestaToPromise(respuesta).then(resp => {
+          this.alertasService.message('ELIA','Respuesta guardada..')
           this.modalCtrl.dismiss(true)
           console.log('resp', resp)
+          
         }, error => {
+          console.log('error', error)
+          this.alertasService.message('ELIA','Lo sentimos algo salio mal..')
           console.log('error', error)
         })
         break;
@@ -82,9 +89,13 @@ export class FormularioRespuestaPage implements OnInit {
       case 'SEUN':
         respuesta.respuesta = this.seun;
         this.respuestasEncuestasService.syncPostRespuestaEncuestaToPromise(respuesta).then(resp => {
+          this.alertasService.message('ELIA','Respuesta guardada..')
           this.modalCtrl.dismiss(true)
+          
           console.log('resp', resp)
         }, error => {
+          console.log('error', error)
+          this.alertasService.message('ELIA','Lo sentimos algo salio mal..')
           console.log('error', error)
         })
         break;
