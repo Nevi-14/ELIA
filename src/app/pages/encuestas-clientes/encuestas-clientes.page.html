@@ -1,0 +1,43 @@
+<ion-header class="ion-no-border ion-padding">
+  <ion-toolbar>
+    <ion-title>Encuestas Clientes</ion-title>
+    <ion-searchbar style="max-width: 40%;margin-top: 1.5rem;" slot="end" mode="ios" placeholder="buscar encuesta" inputmode="text" type="text"   [debounce]="250"  ></ion-searchbar>
+    <ion-fab-button (click)="crearEncuestaCliente()" color="dark" size="small" slot="end">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button (click)="encuestasLineas()" color="dark" size="small" slot="end">
+      <ion-icon name="settings"></ion-icon>
+    </ion-fab-button>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+<ion-grid  style="height: 100%;">
+  <ion-row style="height: 100%;">
+ 
+    <ion-col size="12" style="height: 100%;overflow: auto;">
+      <ion-list  >
+        <ion-item (click)="clientesRespuestas(encuesta)" detail
+        *ngFor="let encuesta of encuestas" detail>
+          <ion-label>
+            <strong  >{{encuesta.nom_Clt}}</strong>
+            <p  style="margin-top: 0.5rem;margin-bottom: 0.5rem;">
+              <strong>{{encuesta.tipo_Respuesta == 'SEUN' ? 'Selección Unica' : encuesta.tipo_Respuesta == 'SEMU' ? 'Selección multiple' :  encuesta.tipo_Respuesta == 'TEXT' ? 'Respuesta Corta' : 'Pregunta Dicotómatica' }}</strong>
+            
+             
+            </p>
+     
+            <p style="margin-bottom: 0.5rem;">
+              {{ encuesta.vigencia_Inicio | date }} / {{encuesta.vigencia_Fin | date}}
+            </p>
+            {{encuesta.pregunta}}
+    
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+
+</ion-content>
+<app-pie-pagina></app-pie-pagina>

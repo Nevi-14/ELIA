@@ -1,0 +1,99 @@
+<ion-header class="ion-padding">
+  <ion-toolbar color="dark">
+    <ion-title>{{ima.rutero[i].idPDV}} - {{cliente}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+    <ion-item color="light">
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="2"><strong>Check In:</strong></ion-col>
+          <ion-col size="4">
+            <ion-label>{{ima.rutero[i].checkIn | date : 'medium' }}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="2"><strong>Bodega:</strong></ion-col>
+          <ion-col size="4">
+            <ion-label>{{ima.rutero[i].checkBodega | date : 'medium' }}</ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="2"><strong>Check Out:</strong></ion-col>
+          <ion-col size="3">
+            <ion-label>{{ima.rutero[i].checkOut | date : 'medium' }}</ion-label>
+          </ion-col>
+          <ion-col size="3"><strong>Tiempo en PDV: </strong>{{difHoras}}:{{difMinutos}}:{{difSegundos}} (H:M:S)</ion-col>
+        </ion-row>
+        <ion-row>
+          <ion-col size="3">
+            <ion-item>
+              <ion-label>Normal</ion-label>
+              <ion-toggle [(ngModel)]="normal" (ionChange)="cambiaQuery()"></ion-toggle>
+            </ion-item>
+          </ion-col>
+          <ion-col size="3">
+            <ion-item>
+              <ion-label>Bajo</ion-label>
+              <ion-toggle [(ngModel)]="bajoStock" (ionChange)="cambiaQuery()"></ion-toggle>
+            </ion-item>
+          </ion-col>
+          <ion-col size="3">
+            <ion-item>
+              <ion-label>StockOut</ion-label>
+              <ion-toggle [(ngModel)]="stockOut" (ionChange)="cambiaQuery()"></ion-toggle>
+            </ion-item>
+          </ion-col>
+          <ion-col size="3">
+            <ion-item>
+              <ion-label>Vencimientos</ion-label>
+              <ion-toggle [(ngModel)]="stockVence" (ionChange)="cambiaQuery()"></ion-toggle>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-grid fixed>
+      <ion-row>
+        <ion-col size="6">
+          <p><strong>Observaciones: </strong></p>
+        </ion-col>
+        <ion-col size="6">
+          <p class="ion-text-right"><strong>Cantidad: {{cantLineas}}</strong></p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    <ion-item color="light">
+      <ion-label class="ion-text-wrap">{{ima.rutero[i].observaciones }}</ion-label>
+    </ion-item>
+    <p></p>
+    <ion-item *ngFor="let item of detalle">
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="1">
+            <ion-label>{{item.idProducto}}</ion-label>
+          </ion-col>
+          <ion-col size="5">
+            <ion-label class="ion-text-wrap">{{item.nombre}}</ion-label>
+          </ion-col>
+          <ion-col size="3">
+            <ion-label *ngIf="item.vencimiento === null">{{item.justificacion | justifica}}</ion-label>
+            <ion-label *ngIf="item.vencimiento !== null" color="danger">Vence: {{item.vencimiento | date : 'mediumDate'}}</ion-label>
+          </ion-col>
+          <ion-col size="1">
+            <ion-label>
+              <ion-icon *ngIf="item.stock === 0" size="large" slot="end" name="checkbox-outline" color="success"></ion-icon>
+              <ion-icon *ngIf="item.stock === -1" size="large" slot="end" name="checkbox-outline" color="danger"></ion-icon>
+              <ion-icon *ngIf="item.stock === 1" size="large" slot="end" name="checkbox-outline" color="warning"></ion-icon>
+          </ion-label>
+          </ion-col>
+          <ion-col size="2">
+            <ion-label *ngIf="item.vencimiento !== null">Cantidad: {{item.cantidadVencen}}</ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,92 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-button (click)="cerrarModal()"  fill="clear" slot="start">
+      <ion-icon color="dark" size="large" name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <ion-title>Editar Pregunta</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+ <ion-grid   style="height: 100%;">
+  <ion-row   style="height: 100%;">
+
+    <ion-col size="12">
+      <ion-label class="ion-margin-bottom">Pregunta</ion-label>
+    </ion-col>
+    <ion-col size="12">
+      <ion-input name="name"    type="text" [(ngModel)]="pregunta.pregunta"   ></ion-input>
+    </ion-col>
+     <ion-col size="6">
+      <ion-row>
+        <ion-col size="12">
+          <ion-label class="ion-margin-bottom">Tipo Respuesta</ion-label>
+        </ion-col>
+        <ion-col size="12">
+    
+        <ion-select [(ngModel)]="pregunta.tipo_Respuesta"  placeholder="tipo">
+          <ion-select-option value="TEXT">Texto</ion-select-option>
+          <ion-select-option value="SESN">Dicotómatica</ion-select-option>
+          <ion-select-option value="SEUN">Selección Unica</ion-select-option>
+          <ion-select-option value="SEMU">Selección Multiple</ion-select-option>
+        </ion-select>
+  
+        </ion-col>
+      </ion-row>
+      
+     </ion-col>
+     <ion-col size="6">
+      <ion-row>
+        <ion-col size="12">
+          <ion-label class="ion-margin-bottom">Repite</ion-label>
+        </ion-col>
+        <ion-col size="12">
+          <ion-input name="name"    type="text" [(ngModel)]="pregunta.repite"   ></ion-input>
+        </ion-col>
+      </ion-row>
+      
+     </ion-col>
+                <ion-col size="12">
+                  <ion-row>
+                    <ion-col size="12">
+                      <ion-label class="ion-margin-bottom">Datos</ion-label>
+                    </ion-col>
+                   
+                    <ion-col size="12">
+                      <ion-input class="description" name="datos" [(ngModel)]="pregunta.datos"   type="text"  ></ion-input>
+                    </ion-col>
+                  </ion-row>
+                      </ion-col>
+                      <ion-col size="12">
+                        <ion-list>  
+                          <ion-list-header>
+                            <ion-label>Seleccionar Encuesta {{pregunta.iD_ENCUESTA}}</ion-label>
+                          </ion-list-header>
+                          <ion-radio-group name="iD_ENCUESTA" [(ngModel)]="pregunta.iD_ENCUESTA">
+     
+                            <ion-item *ngFor="let encuesta of encuestas">
+                              <ion-label>
+                                <p style="margin-bottom: 0.5rem;">
+                                  {{encuesta.vigencia_Inicio  | date }}  / {{encuesta.vigencia_Fin | date}}
+                                </p>
+                                {{encuesta.descripcion}}
+                              </ion-label>
+                              <ion-radio [value]="encuesta.id"></ion-radio>
+                            </ion-item>
+                         
+                          </ion-radio-group>
+                        </ion-list>
+                      </ion-col>
+            
+  </ion-row>
+ </ion-grid>
+
+
+</ion-content>
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-button (click)="editarPregunta()"  expand="block" fill="solid" color="dark">
+      Guardar Pregunta
+      </ion-button>
+  </ion-toolbar>
+</ion-footer>

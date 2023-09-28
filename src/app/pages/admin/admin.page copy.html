@@ -1,0 +1,118 @@
+<ion-header>
+  <ion-toolbar color="dark">
+    <ion-title>Configuración</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid fixed>
+    <ion-row>
+      <ion-col size="3">
+        <ion-card button="true" (click)="syncClientes()">
+          <img src="../../../assets/icon/pdvMas.png" />
+          <ion-card-header color="light">
+            <ion-card-title>Clientes</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="1">
+        <p></p>
+      </ion-col>
+      <ion-col size="3">
+        <ion-card button="true" (click)="syncProductos()">
+          <img src="../../../assets/icon/product.png" />
+          <ion-card-header color="light">
+            <ion-card-title>Productos</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="1">
+        <p></p>
+      </ion-col>
+      <ion-col size="3"  *ngIf="mostrarPendientes">
+        <ion-card button="true" (click)="cargarDatos()" *ngIf="actualizar">
+          <img src="../../../assets/icon/ok.png" />
+          <ion-card-header color="light">
+            <ion-card-title>Cargar Clientes</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col size="3" *ngIf="mostrarProductos">
+        <ion-card  >
+          <img src="../../../assets/icon/ok.png" />
+          <input (change)="fileUpload($event)" id="file-upload" type="file" name="fileUpload" accept=".xls,.xlsx" />
+  
+          <ion-card-header color="light">
+            <ion-card-title>Cargar Productos</ion-card-title>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+  <p></p>
+
+  <ion-list *ngIf="mostrarPendientes && !mostrarProductos">
+    <ion-item color="light">
+      <ion-grid fixed>
+        <ion-row>
+          <ion-col size="1"><strong>Ruta</strong></ion-col>
+          <ion-col size="1"><strong>Código</strong></ion-col>
+          <ion-col size="4"><strong>Nombre</strong></ion-col>
+          <ion-col size="5"><strong>Dirección</strong></ion-col>
+          <ion-col *ngIf="!actualizando" size="1">Cant: {{cantidad}}</ion-col>
+          <ion-col *ngIf="actualizando" size="1">Avan: {{avance | number: '2.1-2'}}%</ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+    <ion-grid fixed *ngFor="let item of pendientes">
+      <ion-row *ngIf="!actualizando" >
+        <ion-col size="1">{{item.cod_Zon}}</ion-col>
+          <ion-col size="1">{{item.cod_Clt}}</ion-col>
+          <ion-col size="4">{{item.nom_Clt}}</ion-col>
+          <ion-col size="6">{{item.dir_Clt}}</ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-grid fixed *ngFor="let item of conError">
+      <ion-row *ngIf="actualizando">
+        <ion-col size="1">{{item.cod_Zon}}</ion-col>
+          <ion-col size="1">{{item.cod_Clt}}</ion-col>
+          <ion-col size="4">{{item.nom_Clt}}</ion-col>
+          <ion-col size="6">{{item.dir_Clt}}</ion-col>
+      </ion-row>
+    </ion-grid>
+    
+  </ion-list>
+  <ion-list *ngIf="mostrarProductos && !mostrarPendientes">
+    <ion-item color="light">
+
+
+      <ion-grid fixed>
+        <ion-row *ngIf="productosArray.length > 0">
+          <ion-col size="2"><strong>ID</strong></ion-col>
+          <ion-col size="2"><strong>idCliente</strong></ion-col>
+          <ion-col size="3"><strong>nombre</strong></ion-col>
+          <ion-col size="1"><strong>precio</strong></ion-col>
+          <ion-col size="1"><strong>codigoBarras</strong></ion-col>
+          <ion-col size="1"><strong>stockMinimo</strong></ion-col>
+          <ion-col size="2"><strong>idProduc</strong></ion-col>
+        </ion-row>
+
+        <ion-row  *ngFor="let producto of productosArray">
+          <ion-col size="2"><strong>{{producto.ID}}</strong></ion-col>
+          <ion-col size="2"><strong>{{producto.idCliente}}</strong></ion-col>
+          <ion-col size="3"><strong>{{producto.nombre}}</strong></ion-col>
+          <ion-col size="1"><strong>{{producto.precio}}</strong></ion-col>
+          <ion-col size="1"><strong>{{producto.codigoBarras}}</strong></ion-col>
+          <ion-col size="1"><strong>{{producto.stockMinimo}}</strong></ion-col>
+          <ion-col size="2"><strong>{{producto.idProduc}}</strong></ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+
+    
+  </ion-list>
+  
+</ion-content>

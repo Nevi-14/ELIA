@@ -1,3 +1,88 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-split-pane contentId="main-split">
+    <ion-menu (mouseover)="openMenu()" [ngClass]="appSettingsService.menu   ? 'expand-menu' :'menu-hide'"
+      contentId="main-content" type="overlay" menuId="myMenu">
+      <ion-header class="ion-no-border">
+        <ion-toolbar color="dark"  >
+ <ion-label class="ion-text-left" style="margin-left: 1rem;">
+<strong>IMA</strong>
+</ion-label>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content  >
+
+
+
+        <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+
+          <ion-item   (click)="menuAction(p.url)" button lines="{{appSettingsService.menu ? '' : 'none'}}">
+        
+<ion-icon    name="{{p.icon}}"></ion-icon>
+            <ion-label class="ion-text-uppercase" style="margin-left: 0.5rem;font-size: 14px;"  *ngIf="appSettingsService.menu">
+              <strong>{{ p.title }}</strong>
+            </ion-label>
+          </ion-item>
+        </ion-menu-toggle>
+
+
+   
+<ion-list>
+  
+  <ion-toolbar color="dark"  *ngIf="appSettingsService.menu">
+    <ion-label class="ion-text-left" style="margin-left: 1rem;">
+   <strong>ESTADÍSTICAS</strong>
+   </ion-label>
+           </ion-toolbar>
+  <ion-item lines="none">
+    <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+    <ion-label>Clientes: {{ ima.totalClientes }}</ion-label>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+    <ion-label>Rutas: {{ ima.totalRutas }}</ion-label>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+    <ion-label>Visitados: {{ ima.totalVisitados }}</ion-label>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+    <ion-label>En Proceso: {{ ima.totalEnProceso }}</ion-label>
+  </ion-item>
+  <ion-item lines="none">
+    <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+    <ion-label>Pendientes: {{ ima.totalPendientes }}</ion-label>
+  </ion-item>
+  <ion-item lines="none" (click)="fecha()">
+    <ion-icon slot="start" ios="bookmark-outline" md="bookmark-sharp"></ion-icon>
+    <ion-label>Fecha: {{ ima.fecha | date : 'shortDate' }}</ion-label>
+    <ion-icon slot="end" name="calendar-number-outline"></ion-icon>
+  </ion-item>
+
+</ion-list>
+
+      </ion-content>
+      <ion-footer class="ion-no-border ion-hide-md-up" >
+        <ion-toolbar color="dark">
+          <ion-button  color="primary" size="small" slot="end">
+            &copy; {{year}} SDE - V1.1
+          </ion-button>
+        </ion-toolbar>
+      </ion-footer>
+    </ion-menu>
+
+
+    <div id="main-split" (mouseover)="closeMenu()">
+
+      <ion-router-outlet id="main-content">
+
+   
+
+      </ion-router-outlet>
+
+    </div>
+
+  </ion-split-pane>
+
 </ion-app>
+

@@ -1,0 +1,82 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-button (click)="cerrarModal()"  fill="clear" slot="start">
+      <ion-icon color="dark" size="large" name="arrow-back-outline"></ion-icon>
+    </ion-button>
+    <ion-title>Crear Encuesta Cliente</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+ <ion-grid   style="height: 100%;">
+  <ion-row   style="height: 100%;">
+
+    <ion-col size="12" style="height: 50%;overflow: auto;">
+      
+      <ion-list style="height: 40%;">
+        <ion-list-header style="display: flex;justify-content: center;align-items: center;">
+         <ion-grid >
+          <ion-row>
+            <ion-col size="3" style="display: flex;justify-content: flex-start;align-items: center;">
+              <ion-label>Clientes</ion-label>
+            </ion-col>
+            <ion-col size="9">
+              <ion-searchbar  placeholder="cliente"  [debounce]="250" mode="ios"></ion-searchbar>
+            </ion-col>
+          </ion-row>
+         </ion-grid>
+          
+        </ion-list-header>
+      </ion-list>
+      <ion-list style="height: 60%;overflow: auto;">  
+        <ion-radio-group [(ngModel)]="encuesta.cliente" name="auto"  >
+ 
+    <ion-item detail *ngFor="let cliente of clientes">
+      <ion-label>{{cliente.nom_Clt}}</ion-label>
+      <ion-radio [value]="cliente.cod_Clt"></ion-radio>
+     </ion-item>
+ 
+        </ion-radio-group>
+      </ion-list>
+    </ion-col>
+    <ion-col size="12" style="height: 50%;overflow: auto;">
+      
+      <ion-list style="height: 40%;">
+        <ion-list-header style="display: flex;justify-content: flex-start;align-items: center;">
+          <ion-grid >
+            <ion-row>
+              <ion-col size="3" style="display: flex;justify-content: flex-start;align-items: center;">
+                <ion-label>Preguntas</ion-label>
+              </ion-col>
+              <ion-col size="9">
+                <ion-searchbar placeholder="pregunta"  [debounce]="250" mode="ios"></ion-searchbar>
+              </ion-col>
+            </ion-row>
+           </ion-grid>
+        </ion-list-header>
+      </ion-list>
+      <ion-list style="height: 60%;overflow: auto;">  
+        <ion-radio-group [(ngModel)]="encuesta.linea" name="auto"  >
+ 
+    <ion-item detail *ngFor="let pregunta of preguntas">
+      <ion-label class="ion-text-wrap"> {{pregunta.pregunta}} </ion-label>
+      <ion-radio [value]="pregunta.id"></ion-radio>
+     </ion-item>
+ 
+        </ion-radio-group>
+      </ion-list>
+    </ion-col>
+ 
+  </ion-row>
+ </ion-grid>
+
+
+</ion-content>
+                        
+<ion-footer class="ion-no-border">
+  <ion-toolbar>
+    <ion-button (click)="guardarEncuesta()"   expand="block" fill="solid" color="dark">
+      Guardar Encuesta Cliente
+      </ion-button>
+  </ion-toolbar>
+</ion-footer>

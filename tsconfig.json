@@ -22,7 +22,9 @@
       "es2018", 
       "dom"
     ],
-    "useDefineForClassFields": false
+    "useDefineForClassFields": false,
+    "strictPropertyInitialization": false // https://www.iteramos.com/pregunta/87544/la-propiedad--no-tiene-inicializador-y-no-se-asigna-definitivamente-en-el-constructor
+ 
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

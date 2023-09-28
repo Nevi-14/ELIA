@@ -1,0 +1,20 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-item>
+      <ion-label>Lista</ion-label>
+      <ion-toggle checked (ionChange)="cambiaLista()"></ion-toggle>
+    </ion-item>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div id="mapa"></div>
+
+  <ion-list id="lista" *ngIf="listaActiva">
+    <ion-item *ngFor="let item of rutas; let i = index">
+      <ion-label (click)="irMarcador(i)">{{item.ruta}} - {{item.cliente}}</ion-label>
+    </ion-item>
+  </ion-list>
+
+</ion-content>
+<app-pie-pagina></app-pie-pagina>

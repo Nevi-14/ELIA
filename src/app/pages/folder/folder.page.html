@@ -1,0 +1,89 @@
+<ion-header class="ion-no-border ion-padding">
+  <ion-toolbar>
+    <ion-title>Rutero</ion-title>
+ 
+    <ion-fab-button  (click)="syncRuteroWeb()"   color="dark" size="small" slot="end">
+      <ion-icon name="sync-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-toolbar>
+  <ion-toolbar>
+<ion-item lines="full">
+  <ion-grid >
+    <ion-row>
+      <ion-col size="1">
+        <div class="ion-text-center"><strong>Ruta</strong></div>
+      </ion-col>
+      <ion-col size="1">
+        <div class="ion-text-center"><strong>Orden</strong></div>
+      </ion-col>
+      <ion-col size="4">
+        <div class="ion-text-center"><strong>Cliente</strong></div>
+      </ion-col>
+      <ion-col size="2">
+        <div class="ion-text-center"><strong>Check In</strong></div>
+      </ion-col>
+      <ion-col size="2">
+        <div class="ion-text-center"><strong>Check Out</strong></div>
+      </ion-col>
+      <ion-col size="1">
+        <div class="ion-text-center"><strong>Status</strong></div>
+      </ion-col>
+
+    </ion-row>
+  </ion-grid>
+</ion-item>
+
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+<ion-grid  style="height: 100%;">
+  <ion-row style="height: 100%;">
+ <ion-col size="12">
+  <ion-list>
+    <ion-item *ngIf="ima.rutero.length === 0">
+  <ion-grid>
+    <ion-row>
+      <ion-col size="12" class="ion-text-center">No hay se encontraron registros</ion-col>
+    </ion-row>
+  </ion-grid>
+    </ion-item>
+ 
+    <ion-item *ngFor="let item of ima.rutero | filtro: textoBuscar:'nombre'; let i = index" >
+      <ion-grid fixed>
+   
+        <ion-row (click)="abrirDetalle(i)">
+    
+          <ion-col size="1">
+              <div class="ion-text-start">{{item.ruta}}</div>
+            </ion-col>
+            <ion-col size="1">
+              <div class="ion-text-center">{{item.orden}}</div>
+            </ion-col>
+            <ion-col size="4">
+              <div class="ion-text-start">{{item.idPDV}}. {{item.nombre}}</div>
+            </ion-col>
+            <ion-col size="2">
+              <div class="ion-text-center">{{item.checkIn | date : 'medium'}}</div>
+            </ion-col>
+            <ion-col size="2">
+              <div class="ion-text-center">{{item.checkOut | date : 'medium'}}</div>
+            </ion-col>
+            <ion-col size="1">
+              <div>
+                <ion-icon name="accessibility-outline" size="large" [color]="item.color"></ion-icon>
+              </div>
+            </ion-col>
+        </ion-row>
+
+      </ion-grid>
+    </ion-item>
+
+
+  </ion-list>
+ </ion-col>
+  </ion-row>
+</ion-grid>
+
+</ion-content>
+<app-pie-pagina></app-pie-pagina>

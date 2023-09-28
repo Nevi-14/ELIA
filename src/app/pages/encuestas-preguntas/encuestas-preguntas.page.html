@@ -1,0 +1,86 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-title>Encuestas Preguntas</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+<ion-grid >
+  <ion-row>
+    <ion-col size="6">
+      <ion-list>
+        <ion-toolbar>
+          <ion-grid >
+            <ion-row>
+              <ion-col size="12">
+                <ion-title  >Encuestas</ion-title>
+           
+               
+              </ion-col>
+              <ion-col size="12" style="display: flex;justify-content: space-around;align-items: center;">
+          <ion-searchbar mode="ios" placeholder="buscar encuesta"   [debounce]="250" style="width: 90%;margin-top: 1rem;" ></ion-searchbar>
+          <ion-fab-button (click)="crearEncuesta()"   color="dark" size="small" >
+            <ion-icon name="add"></ion-icon>
+          </ion-fab-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+                  </ion-toolbar>
+        <ion-item    *ngFor="let encuesta of encuestas">
+          <ion-label>
+            <p style="margin-bottom: 0.5rem;">
+              {{encuesta.vigencia_Inicio  | date }}  / {{encuesta.vigencia_Fin | date}}
+            </p>
+            {{encuesta.descripcion}}
+          </ion-label>
+          <ion-fab-button (click)="editarEncuesta(encuesta)" slot="end" size="small" color="dark">
+            <ion-icon name="create"></ion-icon>
+          </ion-fab-button>
+          <ion-fab-button  (click)="cargarPreguntas(encuesta)" slot="end" size="small" color="dark">
+            <ion-icon name="eye"></ion-icon>
+          </ion-fab-button>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+    <ion-col size="6">
+      <ion-list>
+        <ion-toolbar>
+<ion-grid >
+  <ion-row>
+    <ion-col size="12">
+      <ion-title  >Preguntas</ion-title>
+ 
+     
+    </ion-col>
+    <ion-col size="12" style="display: flex;justify-content: space-around;align-items: center;">
+<ion-searchbar mode="ios" placeholder="buscar pregunta"   [debounce]="250" style="width: 90%;margin-top: 1rem;" ></ion-searchbar>
+<ion-fab-button (click)="crearPregunta()"  color="dark" size="small" >
+  <ion-icon name="add"></ion-icon>
+</ion-fab-button>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+        </ion-toolbar>
+        <ion-item  *ngFor="let pregunta of preguntas">
+          <ion-label>
+            <p>
+              <strong>{{pregunta.tipo_Respuesta == 'SEUN' ? 'Selección Unica' : pregunta.tipo_Respuesta == 'SEMU' ? 'Selección multiple' :  pregunta.tipo_Respuesta == 'TEXT' ? 'Respuesta Corta' : 'Pregunta Dicotómatica' }}</strong>
+            
+             
+            </p>
+            <p style="margin-top: 0.5rem;margin-bottom: 0.5rem;">
+              {{pregunta.pregunta   }}  
+            </p>
+    
+           Repite :  {{pregunta.repite}}
+          </ion-label>
+          <ion-fab-button (click)="editarPregunta(pregunta)" slot="end" size="small" color="dark">
+            <ion-icon name="create"></ion-icon>
+          </ion-fab-button>
+        </ion-item>
+      </ion-list>
+    </ion-col>
+  </ion-row>
+</ion-grid>
+</ion-content>
+<app-pie-pagina></app-pie-pagina>

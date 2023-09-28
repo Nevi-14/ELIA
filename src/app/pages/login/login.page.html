@@ -1,0 +1,60 @@
+<ion-header class="ion-no-border">
+  <ion-toolbar>
+    <ion-buttons>
+      <ion-button (click)="salir()" shape="round" slot="start">
+        <ion-icon name="chevron-back-outline"></ion-icon>
+        Back
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content no-border>
+
+      <form #formulario="ngForm" (ngSubmit)="login()" *ngIf="ima.usuarios.usuario === ''">
+        <ion-grid fixed>
+
+          <ion-row>
+            <ion-col>
+              
+                <ion-list>
+                  
+                  <ion-item>
+                    <ion-label position="floating">Usuario</ion-label>
+                    <ion-input name="user"
+                                type="text"
+                                [(ngModel)]="usuarioForm.usuarioF"
+                                required></ion-input>
+                  </ion-item>
+                  
+                  <ion-item >
+                    <ion-label position="floating">Contraseña</ion-label>
+                    <ion-input  name="password"  [(ngModel)]="usuarioForm.claveF"
+                    required type="{{showPass ? 'text' : 'password'}}" ></ion-input>
+                    <ion-icon slot="end"  (click)="showPass=!showPass" icon-only name="{{showPass ? 'eye' : 'eye-off'}}"></ion-icon>
+                  </ion-item>
+
+                </ion-list>
+            </ion-col>
+          </ion-row>
+
+          <ion-row>
+            <ion-col>
+              <ion-button [disabled]="formulario.invalid"
+                          type="submit"
+                          color="primary"
+                          shape="round"
+                          expand="block">
+                Login
+              </ion-button>
+            </ion-col>
+          </ion-row>
+
+        </ion-grid>
+      </form>
+      <ion-button (click)="logout()" expand="block" fill="clear" shape="round">
+        Logout
+      </ion-button>
+
+</ion-content>
+
